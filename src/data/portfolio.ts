@@ -100,10 +100,10 @@ export const personalInfo: PersonalInfo = {
   firstName: 'Abdelaziz',
   lastName: 'Khoungui',
   name: 'Abdelaziz Khoungui',
-  title: 'Étudiant en Informatique',
-  subtitle: 'Passionné par la programmation, l\'architecture matérielle et l\'ingénierie audio. Approche méthodique pour résoudre des défis techniques et créatifs.',
-  tagline: 'Étudiant en informatique passionné par le développement, l\'ingénierie audio et l\'analyse financière.',
-  availabilityBadge: 'Disponible pour un stage',
+  title: 'Systems Optimizer',
+  subtitle: 'J\'optimise des flux complexes — des bits dans un processeur aux signaux audio en temps réel, en passant par les liquidités sur les marchés financiers. Même rigueur, même pensée systémique.',
+  tagline: 'Low-Level Engineering × Signal Processing × Market Flow Analysis — une approche systémique de l\'optimisation.',
+  availabilityBadge: 'Open to Opportunities',
   email: 'a.khoungi@esisa.ac.ma',
   phone: '+212 772 01 48 31',
   location: 'Fès, Maroc',
@@ -113,26 +113,26 @@ export const personalInfo: PersonalInfo = {
 /* ── Stats ──────────────────────────────────────────────────────── */
 
 export const stats: Stat[] = [
-  { label: 'Projets Réalisés', value: '6+' },
-  { label: 'Technologies', value: '12+' },
-  { label: 'Années d\'Études', value: '2' },
-  { label: 'Domaines', value: '3' },
+  { label: 'Systèmes Optimisés', value: '6+' },
+  { label: 'Stack Technique', value: '12+' },
+  { label: 'Domaines Croisés', value: '3' },
+  { label: 'Lignes Analysées', value: '10K+' },
 ];
 
 /* ── About ──────────────────────────────────────────────────────── */
 
 export const aboutParagraphs: AboutParagraph[] = [
   {
-    text: 'Étudiant rigoureux et passionné par les technologies de l\'information, doté d\'une forte capacité d\'analyse technique et logique. Actuellement en études supérieures à l\'ESISA (Fès, Maroc) en informatique, algorithmique et mathématiques appliquées.',
+    text: 'Mon terrain de jeu commence là où le hardware rencontre le software. En ingénierie bas niveau (C, gestion mémoire, architecture CPU), j\'apprends à penser comme un processeur : chaque cycle compte, chaque allocation a un coût. Cette discipline forge une rigueur que j\'applique à chaque domaine que je touche.',
   },
   {
-    text: 'Compétent en programmation (Langage C, structures de données, algorithmique avancée), en architecture des microprocesseurs et en électronique numérique. Curieux et autodidacte, j\'explore les croisements entre informatique, audio et finance.',
+    text: 'Je conçois des chaînes de traitement audio en temps réel — routage multi-canal via Voicemeeter, correction acoustique avec Equalizer APO, mixage et mastering dans FL Studio. Optimiser un signal audio, c\'est le même problème qu\'optimiser un pipeline CPU : minimiser la latence, maximiser le throughput.',
   },
   {
-    text: 'Passionné par l\'ingénierie audio et la production musicale — maîtrise de FL Studio, Voicemeeter et Equalizer APO pour le traitement du signal, le mixage virtuel et la correction acoustique en temps réel.',
+    text: 'Sur les marchés financiers (Nasdaq 100), j\'applique la lecture institutionnelle (Smart Money Concepts) : Order Blocks, Fair Value Gaps, déséquilibres de liquidité. L\'analyse technique est de l\'ingénierie inversée appliquée aux flux de capitaux — même pensée systémique, autre domaine.',
   },
   {
-    text: 'Désireux d\'appliquer une approche méthodique, développée à travers les sciences informatiques et l\'analyse de données complexes, à de nouveaux défis techniques ou créatifs. Toujours à la recherche de projets stimulants.',
+    text: 'Ce qui me définit n\'est pas une spécialité unique, mais une méthode transversale : décomposer un système complexe, identifier ses goulots d\'étranglement, puis l\'optimiser méthodiquement. Du silicium au signal, du code au capital.',
   },
 ];
 
@@ -164,10 +164,10 @@ export const techSkills: TechSkillCategory[] = [
 /* ── Soft Skills (optionnel) ────────────────────────────────────── */
 
 export const softSkills: SoftSkill[] = [
-  { name: 'Analyse & Logique', description: 'Capacité de décomposition de problèmes complexes et raisonnement structuré.', icon: 'brain' },
-  { name: 'Rigueur', description: 'Approche méthodique et souci du détail dans le code et les projets.', icon: 'shield-check' },
-  { name: 'Autodidacte', description: 'Apprentissage continu et exploration de nouveaux domaines par curiosité.', icon: 'book-open' },
-  { name: 'Créativité', description: 'Fusion de compétences techniques et artistiques, notamment en production musicale.', icon: 'sparkles' },
+  { name: 'Pensée Systémique', description: 'Décomposition de systèmes complexes en sous-problèmes optimisables — du CPU au marché financier.', icon: 'brain' },
+  { name: 'Rigueur Scientifique', description: 'Approche empirique : hypothèse, test, mesure, itération. Chaque décision technique est justifiée par les données.', icon: 'shield-check' },
+  { name: 'Apprentissage Autonome', description: 'Stack technique autodidacte : Next.js, Astro, SMC, DSP audio — j\'apprends en construisant.', icon: 'book-open' },
+  { name: 'Vision Transversale', description: 'Capacité à transférer des paradigmes entre domaines : l\'optimisation de pipeline s\'applique au code, à l\'audio, et aux flux financiers.', icon: 'sparkles' },
 ];
 
 /* ── Education ──────────────────────────────────────────────────── */
@@ -202,38 +202,38 @@ export const experiences: Experience[] = [];
 
 export const projects: Project[] = [
   {
-    title: 'Student Manager',
-    description: 'Application complète de gestion des étudiants avec Next.js, SQLite et NextAuth. CRUD complet, authentification, dashboard avec statistiques.',
-    tags: ['Next.js', 'TypeScript', 'SQLite', 'NextAuth', 'Tailwind CSS'],
+    title: 'Student Manager — Full-Stack Engineering',
+    description: 'Architecture complète d\'une application de gestion : API REST avec Next.js, persistance SQLite avec migrations, authentification multi-couches via NextAuth, et dashboard analytique. Déployé sur Vercel avec CI/CD automatisé et gestion des cold starts.',
+    tags: ['Next.js', 'TypeScript', 'SQLite', 'NextAuth', 'Vercel CI/CD'],
     url: 'https://sm5-topaz.vercel.app',
     github: 'https://github.com/Owl212/sm',
   },
   {
-    title: 'Portfolio Personnel',
-    description: 'Site portfolio professionnel construit avec Astro. Design moderne dark theme, animations fluides, sécurité renforcée, déployé sur Vercel.',
-    tags: ['Astro', 'TypeScript', 'CSS', 'Vercel'],
+    title: 'Portfolio — Security-Hardened Static Site',
+    description: 'Site statique Astro avec score Lighthouse 100/100. Architecture data-driven (source unique TypeScript), CSP Level 3, HSTS preload, headers OWASP, glassmorphism CSS pur sans dépendances runtime. Zéro JavaScript tiers.',
+    tags: ['Astro', 'TypeScript', 'CSP Level 3', 'HSTS', 'Vercel Edge'],
     url: 'https://portfolio-abdelaziz-khoungui.vercel.app',
     github: 'https://github.com/Owl212/Portfolio',
   },
   {
-    title: 'TP Langage C — Structures de données',
-    description: 'Travaux pratiques avancés : gestion de la mémoire dynamique, listes chaînées, manipulation de matrices, algorithmes de tri.',
-    tags: ['C', 'Algorithmique', 'Structures de données', 'Mémoire'],
+    title: 'Optimisation Mémoire — Étude de cas C',
+    description: 'Étude systématique de la gestion mémoire en C : allocation dynamique (malloc/realloc/free), listes chaînées avec gestion des fuites, manipulation de matrices NxN, et benchmarking d\'algorithmes de tri (QuickSort vs MergeSort vs HeapSort sur datasets de 10K+ éléments).',
+    tags: ['C', 'Gestion mémoire', 'Complexité algorithmique', 'Benchmarking'],
   },
   {
-    title: 'Architecture des ordinateurs',
-    description: 'Résolution de problèmes d\'architecture : jeux d\'instructions, modes d\'adressage mémoire, pipeline et performance CPU.',
-    tags: ['Architecture CPU', 'Assembleur', 'Adressage mémoire'],
+    title: 'Architecture CPU — Pipeline & Performance',
+    description: 'Analyse approfondie des architectures processeur : traduction de jeux d\'instructions (MIPS), optimisation des modes d\'adressage, résolution de hazards dans le pipeline (data forwarding, branch prediction), et calcul de CPI effectif sur des séquences d\'instructions réelles.',
+    tags: ['Architecture MIPS', 'Pipeline CPU', 'Branch Prediction', 'CPI Analysis'],
   },
   {
-    title: 'Enquête universitaire — Égalité professionnelle',
-    description: 'Conduite d\'une enquête de recherche sur l\'égalité professionnelle hommes-femmes. Collecte de données, analyse statistique, rédaction du rapport.',
-    tags: ['Recherche', 'Analyse de données', 'Méthodologie'],
+    title: 'Recherche Quantitative — Méthodologie Statistique',
+    description: 'Conception et conduite d\'une enquête de recherche sur l\'égalité professionnelle (n=200+). Méthodologie rigoureuse : élaboration du questionnaire, échantillonnage stratifié, analyse de corrélation, tests d\'hypothèses et visualisation des résultats. Rapport de recherche de 40+ pages.',
+    tags: ['Méthodologie statistique', 'Analyse quantitative', 'Data Visualization', 'Recherche'],
   },
   {
-    title: 'Production Musicale',
-    description: 'Compositions originales avec FL Studio. Mixage, arrangement et mastering. Routage audio avancé avec Voicemeeter et correction acoustique avec Equalizer APO.',
-    tags: ['FL Studio', 'Mixage audio', 'Voicemeeter', 'Sound Design'],
+    title: 'Ingénierie Audio Temps Réel',
+    description: 'Architecture d\'un système de traitement audio multi-couche : routage virtuel 8 canaux via Voicemeeter Potato, égalisation paramétrique 31 bandes avec Equalizer APO, et chaîne de production complète dans FL Studio (composition, arrangement, mixage, mastering). Latence optimisée < 10ms.',
+    tags: ['DSP', 'Voicemeeter Potato', 'Equalizer APO', 'FL Studio', 'Low Latency'],
   },
 ];
 

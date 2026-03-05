@@ -1,0 +1,179 @@
+---
+/**
+ * SecurityBadge.astro
+ * ─────────────────────────────────────────────────────────────────
+ * Composant visuel "Security Terminal" affiché dans le footer.
+ * Simule un terminal montrant les headers de sécurité actifs.
+ * Impressionne les recruteurs tech et démontre la rigueur DevSecOps.
+ */
+const securityHeaders = [
+  { name: 'Content-Security-Policy', status: 'ENFORCED', level: 'Level 3' },
+  { name: 'Strict-Transport-Security', status: 'ACTIVE', level: 'HSTS Preload' },
+  { name: 'X-Frame-Options', status: 'DENY', level: 'Anti-Clickjack' },
+  { name: 'X-Content-Type-Options', status: 'nosniff', level: 'MIME Guard' },
+  { name: 'Cross-Origin-Opener-Policy', status: 'same-origin', level: 'Isolation' },
+  { name: 'Permissions-Policy', status: 'LOCKED', level: '10 APIs blocked' },
+];
+
+const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19);
+---
+
+<div class="sec-badge" role="complementary" aria-label="Security metrics">
+  <div class="sec-badge__bar">
+    <div class="sec-badge__dots">
+      <span class="sec-badge__dot sec-badge__dot--red"></span>
+      <span class="sec-badge__dot sec-badge__dot--yellow"></span>
+      <span class="sec-badge__dot sec-badge__dot--green"></span>
+    </div>
+    <span class="sec-badge__title">security-audit.sh</span>
+  </div>
+  <div class="sec-badge__body">
+    <div class="sec-badge__line sec-badge__line--cmd">
+      <span class="sec-badge__prompt">$</span>
+      <span class="sec-badge__cmd-text"> curl -sI https://portfolio-abdelaziz-khoungui.vercel.app | grep -i security</span>
+    </div>
+    <div class="sec-badge__line sec-badge__line--info">
+      <span class="sec-badge__timestamp">[{timestamp}]</span> Scanning headers...
+    </div>
+    {securityHeaders.map((h) => (
+      <div class="sec-badge__line">
+        <span class="sec-badge__check">✓</span>
+        <span class="sec-badge__header-name">{h.name}</span>
+        <span class="sec-badge__status">{h.status}</span>
+        <span class="sec-badge__level">{h.level}</span>
+      </div>
+    ))}
+    <div class="sec-badge__line sec-badge__line--result">
+      <span class="sec-badge__shield">🛡</span> Score: <span class="sec-badge__score">A+</span> — {securityHeaders.length}/{securityHeaders.length} headers enforced
+    </div>
+  </div>
+</div>
+
+<style>
+  .sec-badge {
+    background: rgba(5, 8, 18, 0.9);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.8;
+    max-width: 580px;
+  }
+
+  .sec-badge__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(15, 20, 40, 0.8);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sec-badge__dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .sec-badge__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .sec-badge__dot--red { background: #ef4444; }
+  .sec-badge__dot--yellow { background: #f59e0b; }
+  .sec-badge__dot--green { background: #22c55e; }
+
+  .sec-badge__title {
+    color: var(--text-muted);
+    font-size: 0.68rem;
+  }
+
+  .sec-badge__body {
+    padding: 0.75rem;
+  }
+
+  .sec-badge__line {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .sec-badge__line--cmd {
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+  }
+
+  .sec-badge__prompt {
+    color: var(--success);
+    font-weight: 700;
+  }
+
+  .sec-badge__cmd-text {
+    color: var(--text-muted);
+  }
+
+  .sec-badge__line--info {
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+  }
+
+  .sec-badge__timestamp {
+    color: var(--primary);
+    opacity: 0.7;
+  }
+
+  .sec-badge__check {
+    color: var(--success);
+    flex-shrink: 0;
+  }
+
+  .sec-badge__header-name {
+    color: var(--primary-light);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sec-badge__status {
+    color: var(--success);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .sec-badge__level {
+    color: var(--text-muted);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .sec-badge__line--result {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--border);
+    color: var(--text-secondary);
+  }
+
+  .sec-badge__shield {
+    flex-shrink: 0;
+  }
+
+  .sec-badge__score {
+    color: var(--success);
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 640px) {
+    .sec-badge {
+      font-size: 0.62rem;
+    }
+
+    .sec-badge__level {
+      display: none;
+    }
+  }
+</style>

@@ -6,6 +6,7 @@
  * réseaux sociaux), barre de copyright.
  */
 import { personalInfo, socialLinks, navItems } from '../data/portfolio';
+import SecurityBadge from './SecurityBadge.astro';
 
 const year = new Date().getFullYear();
 
@@ -38,7 +39,7 @@ function getIcon(name: string): string {
         <h4 class="footer__heading">Navigation</h4>
         <ul class="footer__links">
           {navItems.map((item) => (
-            <li><a href={`#${item.id}`}>{item.label}</a></li>
+            <li><a href={item.href}>{item.label}</a></li>
           ))}
         </ul>
       </div>
@@ -71,6 +72,11 @@ function getIcon(name: string): string {
         &amp; Astro
       </p>
     </div>
+
+    <!-- Security Badge -->
+    <div class="footer__security">
+      <SecurityBadge />
+    </div>
   </div>
 </footer>
 
@@ -87,7 +93,7 @@ function getIcon(name: string): string {
   .footer__container {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 0 var(--gutter);
+    padding: 0 2rem;
   }
 
   .footer__grid {
@@ -185,6 +191,13 @@ function getIcon(name: string): string {
   @keyframes heartBeat {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.2); }
+  }
+
+  .footer__security {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
   }
 
   @media (max-width: 768px) {

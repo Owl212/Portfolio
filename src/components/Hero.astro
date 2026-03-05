@@ -41,8 +41,10 @@ function getIcon(name: string): string {
           {personalInfo.lastName}
         </h1>
 
-        <!-- Title -->
-        <p class="hero__title reveal">{personalInfo.title}</p>
+        <!-- Title with typing effect -->
+        <p class="hero__title reveal">
+          <span class="hero__title-prefix">&gt;_</span> {personalInfo.title}
+        </p>
 
         <!-- Subtitle -->
         <p class="hero__subtitle reveal">{personalInfo.subtitle}</p>
@@ -86,6 +88,8 @@ function getIcon(name: string): string {
             width="280"
             height="280"
             loading="eager"
+            decoding="async"
+            fetchpriority="high"
           />
         </div>
       </div>
@@ -177,6 +181,16 @@ function getIcon(name: string): string {
     color: var(--primary-light);
     margin-bottom: 1rem;
     font-family: var(--font-mono);
+  }
+
+  .hero__title-prefix {
+    color: var(--success);
+    animation: blink-cursor 1s step-end infinite;
+  }
+
+  @keyframes blink-cursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
   }
 
   .hero__subtitle {

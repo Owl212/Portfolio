@@ -31,15 +31,76 @@ const {
   <meta name="description" content={description} />
   <meta name="author" content={`${personalInfo.firstName} ${personalInfo.lastName}`} />
   <meta name="theme-color" content="#0a0f1e" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="robots" content="index, follow" />
+  <meta name="generator" content="Astro" />
   <title>{title}</title>
 
-  <!-- Fonts -->
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content="https://portfolio-abdelaziz-khoungui.vercel.app" />
+  <meta property="og:site_name" content={`${personalInfo.name} — Portfolio`} />
+  <meta property="og:locale" content="fr_FR" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+
+  <!-- Preconnect (critical fonts) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Preload critical font files -->
+  <link rel="preload" href="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiA.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="https://fonts.gstatic.com/s/jetbrainsmono/v20/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxjPVmUsaaDhw.woff2" as="font" type="font/woff2" crossorigin />
+
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="canonical" href="https://portfolio-abdelaziz-khoungui.vercel.app" />
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "mainEntity": {
+      "@type": "Person",
+      "name": personalInfo.name,
+      "jobTitle": personalInfo.title,
+      "description": personalInfo.subtitle,
+      "email": personalInfo.email,
+      "telephone": personalInfo.phone,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Fès",
+        "addressCountry": "MA"
+      },
+      "url": "https://portfolio-abdelaziz-khoungui.vercel.app",
+      "sameAs": [
+        "https://github.com/Owl212",
+        "https://www.linkedin.com/in/abdelaziz-khoungui-428355397"
+      ],
+      "alumniOf": {
+        "@type": "EducationalOrganization",
+        "name": "ESISA",
+        "url": "https://www.esisa.ac.ma"
+      },
+      "knowsAbout": [
+        "Low-Level Programming",
+        "C Language",
+        "CPU Architecture",
+        "Digital Signal Processing",
+        "Audio Engineering",
+        "Financial Analysis",
+        "Web Development"
+      ]
+    }
+  })} />
 </head>
 <body>
   <!-- Skip link -->
@@ -238,6 +299,8 @@ const {
     z-index: -2;
     pointer-events: none;
     opacity: 0.4;
+    will-change: transform;
+    contain: strict;
   }
 
   .orb--1 {
@@ -278,6 +341,7 @@ const {
     transform: translateY(30px);
     transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
                 transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
   }
 
   .reveal.revealed {
@@ -365,6 +429,8 @@ const {
     transition: transform var(--transition-base),
                 border-color var(--transition-base),
                 box-shadow var(--transition-base);
+    contain: layout style;
+    will-change: transform;
   }
 
   .glass-card::before {

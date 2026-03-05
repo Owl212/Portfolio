@@ -157,6 +157,25 @@ const hasSoftSkills = softSkills.length > 0;
     font-size: 0.78rem;
     color: var(--text-secondary);
     transition: all var(--transition-fast);
+    position: relative;
+    contain: layout style;
+  }
+
+  .skills__chip:hover {
+    color: var(--primary-light);
+    border-color: var(--primary);
+    text-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+    animation: glitch-flicker 0.3s ease-out;
+  }
+
+  @keyframes glitch-flicker {
+    0% { transform: translate(0); opacity: 1; }
+    10% { transform: translate(-2px, 1px); opacity: 0.8; }
+    20% { transform: translate(2px, -1px); opacity: 1; }
+    30% { transform: translate(-1px, -1px); opacity: 0.9; }
+    40% { transform: translate(1px, 1px); opacity: 1; }
+    50% { transform: translate(0); opacity: 0.85; }
+    100% { transform: translate(0); opacity: 1; }
   }
 
   .skills__card:hover .skills__chip {
