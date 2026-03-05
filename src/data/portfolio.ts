@@ -41,6 +41,8 @@ export interface SoftSkill {
   name: string;
   description: string;
   icon: string;
+  emoji: string;
+  color: string;
 }
 
 export interface Education {
@@ -170,10 +172,12 @@ export const techSkills: TechSkillCategory[] = [
 /* ── Soft Skills (optionnel) ────────────────────────────────────── */
 
 export const softSkills: SoftSkill[] = [
-  { name: 'Pensée Systémique', description: 'Décomposition de systèmes complexes en sous-problèmes optimisables — du CPU au marché financier.', icon: 'brain' },
-  { name: 'Rigueur Scientifique', description: 'Approche empirique : hypothèse, test, mesure, itération. Chaque décision technique est justifiée par les données.', icon: 'shield-check' },
-  { name: 'Apprentissage Autonome', description: 'Stack technique autodidacte : Next.js, Astro, SMC, DSP audio — j\'apprends en construisant.', icon: 'book-open' },
-  { name: 'Vision Transversale', description: 'Capacité à transférer des paradigmes entre domaines : l\'optimisation de pipeline s\'applique au code, à l\'audio, et aux flux financiers.', icon: 'sparkles' },
+  { name: 'Pensée Systémique', description: 'Décomposition de systèmes complexes en sous-problèmes optimisables — du CPU au marché financier. Je vois chaque projet comme un écosystème interconnecté.', icon: 'brain', emoji: '🧠', color: '#8b5cf6' },
+  { name: 'Rigueur Scientifique', description: 'Approche empirique : hypothèse, test, mesure, itération. Chaque décision technique est justifiée par les données, jamais par l\'intuition seule.', icon: 'shield-check', emoji: '🔬', color: '#06b6d4' },
+  { name: 'Apprentissage Autonome', description: 'Stack technique autodidacte : Next.js, Astro, SMC, DSP audio — j\'apprends en construisant. La curiosité est mon moteur principal.', icon: 'book-open', emoji: '📚', color: '#f59e0b' },
+  { name: 'Vision Transversale', description: 'Capacité à transférer des paradigmes entre domaines : l\'optimisation de pipeline s\'applique au code, à l\'audio, et aux flux financiers.', icon: 'sparkles', emoji: '👁️', color: '#ec4899' },
+  { name: 'Résolution Créative', description: 'Face à un problème, je ne cherche pas la solution évidente — je cherche la solution élégante. L\'innovation naît à l\'intersection des contraintes.', icon: 'sparkles', emoji: '💡', color: '#22c55e' },
+  { name: 'Communication Claire', description: 'Transformer des concepts techniques complexes en explications limpides. Documenter, vulgariser, partager : le code ne vit pas seul.', icon: 'sparkles', emoji: '🎯', color: '#f97316' },
 ];
 
 /* ── Education ──────────────────────────────────────────────────── */
