@@ -1,0 +1,75 @@
+---
+/**
+ * About.astro
+ * ─────────────────────────────────────────────────────────────────
+ * Section "À propos" avec cartes numérotées, barre d'accent
+ * verticale en gradient, animations stagger.
+ */
+import { aboutParagraphs } from '../data/portfolio';
+---
+
+<section id="about" class="section-wrapper">
+  <div class="section-header reveal">
+    <span class="section-label">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      À propos
+    </span>
+    <h2 class="section-title">Qui suis-je <span class="gradient-text">?</span></h2>
+    <p class="section-subtitle">Une présentation de mon parcours, mes passions et ma vision.</p>
+  </div>
+
+  <div class="about__grid stagger-children">
+    {aboutParagraphs.map((para, index) => (
+      <div class="about__card glass-card reveal">
+        <div class="about__accent"></div>
+        <span class="about__number">{String(index + 1).padStart(2, '0')}</span>
+        <p class="about__text">{para.text}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .about__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .about__card {
+    padding-left: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .about__accent {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--gradient-primary);
+    border-radius: 4px 0 0 4px;
+  }
+
+  .about__number {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    opacity: 0.6;
+  }
+
+  .about__text {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  @media (max-width: 768px) {
+    .about__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

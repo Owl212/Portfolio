@@ -1,0 +1,395 @@
+---
+/**
+ * Hero.astro
+ * ─────────────────────────────────────────────────────────────────
+ * Section héro pleine hauteur avec nom animé en gradient,
+ * badge de disponibilité, photo avec anneau gradient,
+ * boutons d'action, pilules sociales, stats et scroll indicator.
+ */
+import { personalInfo, stats, socialLinks, projects } from '../data/portfolio';
+
+const icons: Record<string, string> = {
+  'github': '<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/>',
+  'linkedin': '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>',
+  'mail': '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+  'folder-open': '<path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/>',
+  'download': '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+  'send': '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
+  'arrow-down': '<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>',
+};
+
+function getIcon(name: string): string {
+  return icons[name] || '';
+}
+---
+
+<section id="hero" class="hero">
+  <div class="hero__container">
+    <!-- Top content -->
+    <div class="hero__content">
+      <div class="hero__text">
+        <!-- Availability badge -->
+        <div class="hero__badge reveal">
+          <span class="hero__badge-dot"></span>
+          {personalInfo.availabilityBadge}
+        </div>
+
+        <!-- Name -->
+        <h1 class="hero__name reveal">
+          <span class="gradient-text">{personalInfo.firstName}</span>
+          <br />
+          {personalInfo.lastName}
+        </h1>
+
+        <!-- Title -->
+        <p class="hero__title reveal">{personalInfo.title}</p>
+
+        <!-- Subtitle -->
+        <p class="hero__subtitle reveal">{personalInfo.subtitle}</p>
+
+        <!-- Action buttons -->
+        <div class="hero__actions reveal">
+          <a href="#projects" class="hero__btn hero__btn--primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <Fragment set:html={getIcon('folder-open')} />
+            </svg>
+            Voir mes Projets
+          </a>
+          <a href="#contact" class="hero__btn hero__btn--secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <Fragment set:html={getIcon('send')} />
+            </svg>
+            Me Contacter
+          </a>
+        </div>
+
+        <!-- Social pills -->
+        <div class="hero__socials reveal">
+          {socialLinks.map((link) => (
+            <a href={link.url} target="_blank" rel="noopener noreferrer" class="hero__social-pill">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <Fragment set:html={getIcon(link.icon)} />
+              </svg>
+              {link.name}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Avatar -->
+      <div class="hero__avatar-wrapper reveal">
+        <div class="hero__avatar-ring">
+          <img
+            src={personalInfo.avatar}
+            alt={`Photo de ${personalInfo.firstName} ${personalInfo.lastName}`}
+            class="hero__avatar-img"
+            width="280"
+            height="280"
+            loading="eager"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="hero__stats reveal">
+      {stats.map((stat) => (
+        <div class="hero__stat">
+          <span class="hero__stat-value gradient-text">{stat.value}</span>
+          <span class="hero__stat-label">{stat.label}</span>
+        </div>
+      ))}
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="hero__scroll-indicator" aria-hidden="true">
+      <div class="hero__mouse">
+        <div class="hero__mouse-wheel"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: var(--header-height);
+    position: relative;
+  }
+
+  .hero__container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 3rem 2rem 2rem;
+    width: 100%;
+  }
+
+  .hero__content {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4rem;
+    align-items: center;
+    margin-bottom: 4rem;
+  }
+
+  /* Badge */
+  .hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    background: rgba(34, 197, 94, 0.08);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--success);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero__badge-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--success);
+    border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+  }
+
+  /* Name */
+  .hero__name {
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+  }
+
+  .hero__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-light);
+    margin-bottom: 1rem;
+    font-family: var(--font-mono);
+  }
+
+  .hero__subtitle {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  /* Actions */
+  .hero__actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .hero__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all var(--transition-base);
+  }
+
+  .hero__btn--primary {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+  }
+
+  .hero__btn--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+    color: white;
+  }
+
+  .hero__btn--secondary {
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+  }
+
+  .hero__btn--secondary:hover {
+    background: rgba(99, 102, 241, 0.15);
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    color: var(--text-primary);
+  }
+
+  /* Social pills */
+  .hero__socials {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .hero__social-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.85rem;
+    background: var(--bg-card);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
+  }
+
+  .hero__social-pill:hover {
+    border-color: var(--border-hover);
+    color: var(--primary-light);
+    transform: translateY(-2px);
+  }
+
+  /* Avatar */
+  .hero__avatar-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero__avatar-ring {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    padding: 5px;
+    background: var(--gradient-primary);
+    animation: hue-rotate 8s linear infinite;
+  }
+
+  @keyframes hue-rotate {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+
+  .hero__avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--bg-primary);
+    transition: transform var(--transition-spring);
+  }
+
+  .hero__avatar-ring:hover .hero__avatar-img {
+    transform: scale(1.05);
+  }
+
+  /* Stats */
+  .hero__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    padding: 2rem;
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+  }
+
+  .hero__stat {
+    text-align: center;
+  }
+
+  .hero__stat-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  .hero__stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Scroll indicator */
+  .hero__scroll-indicator {
+    display: flex;
+    justify-content: center;
+    margin-top: 2.5rem;
+  }
+
+  .hero__mouse {
+    width: 26px;
+    height: 40px;
+    border: 2px solid var(--border-hover);
+    border-radius: 13px;
+    display: flex;
+    justify-content: center;
+    padding-top: 6px;
+  }
+
+  .hero__mouse-wheel {
+    width: 3px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 2px;
+    animation: scroll-wheel 2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-wheel {
+    0%, 100% { opacity: 1; transform: translateY(0); }
+    50% { opacity: 0.3; transform: translateY(8px); }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .hero__content {
+      grid-template-columns: 1fr;
+      text-align: center;
+      gap: 2rem;
+    }
+
+    .hero__avatar-wrapper {
+      order: -1;
+    }
+
+    .hero__avatar-ring {
+      width: 180px;
+      height: 180px;
+    }
+
+    .hero__subtitle {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero__actions {
+      justify-content: center;
+    }
+
+    .hero__socials {
+      justify-content: center;
+    }
+
+    .hero__stats {
+      grid-template-columns: repeat(2, 1fr);
+      padding: 1.5rem;
+    }
+
+    .hero__stat-value {
+      font-size: 1.5rem;
+    }
+  }
+</style>
