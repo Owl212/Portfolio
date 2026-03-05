@@ -304,68 +304,6 @@ const {
       var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
       /* ═══════════════════════════════════════════════════════════
-         1. CUSTOM CURSOR + TRAIL (desktop only)
-         ═══════════════════════════════════════════════════════════ */
-      if (!isTouch && !reduced) {
-        var cursor = document.createElement('div');
-        cursor.className = 'custom-cursor';
-        var cursorDot = document.createElement('div');
-        cursorDot.className = 'custom-cursor__dot';
-        document.body.appendChild(cursor);
-        document.body.appendChild(cursorDot);
-
-        /* Trail particles */
-        var trailPool = [];
-        for (var t = 0; t < 6; t++) {
-          var particle = document.createElement('div');
-          particle.className = 'cursor-trail';
-          particle.style.opacity = '0';
-          document.body.appendChild(particle);
-          trailPool.push({ el: particle, x: 0, y: 0 });
-        }
-
-        var cx = 0, cy = 0, dx = 0, dy = 0;
-        var trailIdx = 0;
-        var lastTrailTime = 0;
-
-        document.addEventListener('mousemove', function(e) {
-          cx = e.clientX; cy = e.clientY;
-          cursorDot.style.transform = 'translate(' + cx + 'px,' + cy + 'px)';
-
-          /* Spawn trail particle */
-          var now = Date.now();
-          if (now - lastTrailTime > 40) {
-            lastTrailTime = now;
-            var p = trailPool[trailIdx % trailPool.length];
-            p.el.style.transform = 'translate(' + cx + 'px,' + cy + 'px) scale(1)';
-            p.el.style.opacity = '0.6';
-            setTimeout(function(el) {
-              el.style.opacity = '0';
-              el.style.transform = 'translate(' + cx + 'px,' + cy + 'px) scale(0)';
-            }.bind(null, p.el), 50);
-            trailIdx++;
-          }
-        });
-
-        (function lerp() {
-          dx += (cx - dx) * 0.12;
-          dy += (cy - dy) * 0.12;
-          cursor.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
-          requestAnimationFrame(lerp);
-        })();
-
-        /* Cursor expand on interactive elements */
-        document.addEventListener('mouseover', function(e) {
-          var t = e.target.closest('a, button, [data-tilt], .magnetic-btn, input, textarea');
-          if (t) cursor.classList.add('custom-cursor--active');
-        });
-        document.addEventListener('mouseout', function(e) {
-          var t = e.target.closest('a, button, [data-tilt], .magnetic-btn, input, textarea');
-          if (t) cursor.classList.remove('custom-cursor--active');
-        });
-      }
-
-      /* ═══════════════════════════════════════════════════════════
          2. MAGNETIC BUTTONS
          ═══════════════════════════════════════════════════════════ */
       if (!isTouch && !reduced) {
@@ -970,54 +908,6 @@ const {
   }
 
   /* ═══════════════════════════════════════════════════════════════
-     Custom Cursor (Gentlemates-style)
-     ═══════════════════════════════════════════════════════════════ */
-  .custom-cursor {
-    position: fixed;
-    top: -20px;
-    left: -20px;
-    width: 40px;
-    height: 40px;
-    border: 2px solid rgba(99, 102, 241, 0.5);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 99999;
-    transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background 0.3s ease;
-    mix-blend-mode: difference;
-  }
-
-  .custom-cursor--active {
-    width: 60px;
-    height: 60px;
-    top: -30px;
-    left: -30px;
-    border-color: rgba(168, 85, 247, 0.8);
-    background: rgba(168, 85, 247, 0.08);
-  }
-
-  .custom-cursor__dot {
-    position: fixed;
-    top: -4px;
-    left: -4px;
-    width: 8px;
-    height: 8px;
-    background: var(--primary-light);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 100000;
-  }
-
-  /* Hide default cursor when custom cursor is active */
-  @media (hover: hover) and (pointer: fine) {
-    body {
-      cursor: none;
-    }
-    a, button, input, textarea, [data-tilt], .magnetic-btn {
-      cursor: none;
-    }
-  }
-
-  /* ═══════════════════════════════════════════════════════════════
      Split Text Character Reveal
      ═══════════════════════════════════════════════════════════════ */
   .split-char {
@@ -1081,9 +971,7 @@ const {
       transform: none !important;
       transition: none !important;
     }
-    .custom-cursor, .custom-cursor__dot {
-      display: none !important;
-    }
+
   }
 
   /* Divider label */
@@ -1234,22 +1122,6 @@ const {
   }
 
   /* ═══════════════════════════════════════════════════════════════
-     Cursor Trail Particles
-     ═══════════════════════════════════════════════════════════════ */
-  .cursor-trail {
-    position: fixed;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--primary-light);
-    pointer-events: none;
-    z-index: 99998;
-    opacity: 0;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    mix-blend-mode: screen;
-  }
-
-  /* ═══════════════════════════════════════════════════════════════
      Multi-Directional Reveal Variants
      ═══════════════════════════════════════════════════════════════ */
   .reveal-left {
@@ -1330,9 +1202,6 @@ const {
      Mobile: Disable desktop-only features
      ═══════════════════════════════════════════════════════════════ */
   @media (max-width: 768px) {
-    .custom-cursor,
-    .custom-cursor__dot,
-    .cursor-trail,
     .mesh-gradient {
       display: none !important;
     }

@@ -109,7 +109,7 @@ export const personalInfo: PersonalInfo = {
   email: 'a.khoungi@esisa.ac.ma',
   phone: '+212 772 01 48 31',
   location: 'Fès, Maroc',
-  avatar: '/avatar.jpg',
+  avatar: '/avatar.png',
 };
 
 /* ── Stats ──────────────────────────────────────────────────────── */
