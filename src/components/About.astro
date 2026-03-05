@@ -20,7 +20,7 @@ import { aboutParagraphs } from '../data/portfolio';
 
   <div class="about__grid stagger-children">
     {aboutParagraphs.map((para, index) => (
-      <div class="about__card glass-card reveal">
+      <div class="about__card glass-card reveal" data-tilt>
         <div class="about__accent"></div>
         <span class="about__number">{String(index + 1).padStart(2, '0')}</span>
         <p class="about__text">{para.text}</p>

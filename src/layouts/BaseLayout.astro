@@ -147,6 +147,87 @@ const {
       }
     })();
   </script>
+
+  <!-- 3D Mouse Tracking Parallax Tilt Engine -->
+  <script is:inline>
+    (function() {
+      /* ── Accessibility gates ── */
+      var mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (mql.matches) return;
+      var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      if (isTouch) return;
+
+      /* ── Config ── */
+      var MAX_ROT   = 15;    /* degrees */
+      var PERSP     = 1000;  /* px */
+      var SPRING    = 'transform 0.6s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.6s ease';
+      var GLARE_TR  = 'opacity 0.3s ease';
+
+      function initTilt() {
+        var cards = document.querySelectorAll('[data-tilt]');
+        cards.forEach(function(card) {
+          /* Avoid double-init */
+          if (card._tiltInit) return;
+          card._tiltInit = true;
+
+          /* Create glare layer */
+          var glare = document.createElement('div');
+          glare.className = 'tilt-glare';
+          card.appendChild(glare);
+
+          var raf = null;
+
+          card.addEventListener('mouseenter', function() {
+            /* Kill CSS transition on enter for instant response */
+            card.style.transition = 'none';
+            glare.style.transition = 'none';
+          });
+
+          card.addEventListener('mousemove', function(e) {
+            if (raf) cancelAnimationFrame(raf);
+            raf = requestAnimationFrame(function() {
+              var rect = card.getBoundingClientRect();
+              /* Normalised coords: center = 0, edges = ±1 */
+              var nx = ((e.clientX - rect.left) / rect.width  - 0.5) * 2;
+              var ny = ((e.clientY - rect.top)  / rect.height - 0.5) * 2;
+
+              /* Invert so card tilts TOWARD the cursor */
+              var rx = -ny * MAX_ROT;
+              var ry =  nx * MAX_ROT;
+
+              card.style.transform =
+                'perspective(' + PERSP + 'px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateZ(0)';
+              card.style.boxShadow =
+                (ry * -0.5) + 'px ' + (rx * 0.5) + 'px 30px rgba(99,102,241,' + (0.15 + Math.abs(nx * ny) * 0.2) + ')';
+
+              /* Move glare to cursor position */
+              var gx = ((e.clientX - rect.left) / rect.width)  * 100;
+              var gy = ((e.clientY - rect.top)  / rect.height) * 100;
+              glare.style.background =
+                'radial-gradient(circle at ' + gx + '% ' + gy + '%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 35%, transparent 65%)';
+              glare.style.opacity = '1';
+            });
+          });
+
+          card.addEventListener('mouseleave', function() {
+            if (raf) cancelAnimationFrame(raf);
+            /* Spring-back transition */
+            card.style.transition = SPRING;
+            card.style.transform  = 'perspective(' + PERSP + 'px) rotateX(0deg) rotateY(0deg) translateZ(0)';
+            card.style.boxShadow  = '';
+            glare.style.transition = GLARE_TR;
+            glare.style.opacity    = '0';
+          });
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTilt);
+      } else {
+        initTilt();
+      }
+    })();
+  </script>
 </body>
 </html>
 
@@ -453,6 +534,41 @@ const {
 
   .glass-card:hover::before {
     opacity: 1;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     3D Tilt — Override & Glare Layer
+     ═══════════════════════════════════════════════════════════════ */
+  [data-tilt] {
+    transform-style: preserve-3d;
+    will-change: transform, box-shadow;
+  }
+
+  /* Disable the default hover lift — JS drives transform */
+  .glass-card[data-tilt]:hover {
+    transform: none;
+  }
+
+  .tilt-glare {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 2;
+    mix-blend-mode: overlay;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Kill tilt for reduced-motion users at CSS level too */
+  @media (prefers-reduced-motion: reduce) {
+    [data-tilt] {
+      transform: none !important;
+      transition: none !important;
+    }
+    .tilt-glare {
+      display: none !important;
+    }
   }
 
   /* Divider label */

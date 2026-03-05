@@ -40,7 +40,7 @@ const hasSoftSkills = softSkills.length > 0;
 
   <div class="skills__grid stagger-children">
     {techSkills.map((cat) => (
-      <div class="skills__card glass-card reveal">
+      <div class="skills__card glass-card reveal" data-tilt>
         <div class="skills__icon-box">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <Fragment set:html={getIcon(cat.icon)} />
@@ -66,7 +66,7 @@ const hasSoftSkills = softSkills.length > 0;
       <div class="divider-label reveal">Soft Skills</div>
       <div class="soft-skills__grid stagger-children">
         {softSkills.map((skill) => (
-          <div class="soft-skill glass-card reveal">
+          <div class="soft-skill glass-card reveal" data-tilt>
             <div class="soft-skill__icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <Fragment set:html={getIcon(skill.icon)} />
