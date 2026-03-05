@@ -1,0 +1,220 @@
+---
+/**
+ * Experience.astro
+ * ─────────────────────────────────────────────────────────────────
+ * Timeline verticale d'expérience professionnelle avec design
+ * similaire à Education mais avec badge "Current" et icônes métier.
+ */
+import { experiences } from '../data/portfolio';
+
+const hasExperiences = experiences.length > 0;
+---
+
+{hasExperiences && (
+  <section id="experience" class="section-wrapper">
+    <div class="section-header reveal">
+      <span class="section-label">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        Expérience
+      </span>
+      <h2 class="section-title split-text">Mon <span class="gradient-text">Expérience</span></h2>
+      <p class="section-subtitle">Projets professionnels, freelance et initiatives personnelles.</p>
+    </div>
+
+    <div class="exp__timeline stagger-children">
+      {experiences.map((exp, index) => (
+        <div class="exp__item reveal">
+          <!-- Timeline dot -->
+          <div class="exp__dot-wrapper">
+            <div class={`exp__dot ${exp.isCurrent ? 'exp__dot--current' : ''}`}>
+              <div class="exp__dot-inner"></div>
+            </div>
+            {index < experiences.length - 1 && <div class="exp__line"></div>}
+          </div>
+
+          <!-- Content card -->
+          <div class="exp__card glass-card" data-tilt>
+            <div class="exp__card-header">
+              <span class="exp__period">{exp.period}</span>
+              {exp.isCurrent && <span class="exp__badge-current">En cours</span>}
+            </div>
+            <h3 class="exp__role">{exp.role}</h3>
+            {exp.companyUrl ? (
+              <a href={exp.companyUrl} target="_blank" rel="noopener noreferrer" class="exp__company">
+                {exp.company}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            ) : (
+              <span class="exp__company exp__company--no-link">{exp.company}</span>
+            )}
+            <p class="exp__description">{exp.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+<style>
+  .exp__timeline {
+    position: relative;
+    max-width: 750px;
+    margin: 0 auto;
+  }
+
+  .exp__item {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .exp__item:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Dot & line */
+  .exp__dot-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 40px;
+  }
+
+  .exp__dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+    contain: layout style;
+  }
+
+  .exp__dot--current {
+    animation: exp-dot-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes exp-dot-pulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(34, 197, 94, 0.3); }
+    50% { box-shadow: 0 0 25px rgba(34, 197, 94, 0.6); }
+  }
+
+  .exp__dot--current {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+  }
+
+  .exp__dot-inner {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--bg-primary);
+  }
+
+  .exp__line {
+    width: 2px;
+    flex: 1;
+    background: var(--border);
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .exp__line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: linear-gradient(180deg, var(--accent), transparent);
+    animation: exp-trace 3s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  @keyframes exp-trace {
+    0% { transform: translateY(-100%); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateY(calc(500%)); opacity: 0; }
+  }
+
+  /* Card */
+  .exp__card {
+    flex: 1;
+  }
+
+  .exp__card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .exp__period {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    background: rgba(99, 102, 241, 0.08);
+    padding: 0.2rem 0.75rem;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+  }
+
+  .exp__badge-current {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--success);
+    background: rgba(34, 197, 94, 0.1);
+    padding: 0.15rem 0.6rem;
+    border-radius: 100px;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    animation: badge-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes badge-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.2); }
+    50% { box-shadow: 0 0 8px 2px rgba(34, 197, 94, 0.15); }
+  }
+
+  .exp__role {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+  }
+
+  .exp__company {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--accent-light);
+    margin-bottom: 0.75rem;
+  }
+
+  .exp__company--no-link {
+    color: var(--text-secondary);
+  }
+
+  .exp__description {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 768px) {
+    .exp__dot-wrapper {
+      display: none;
+    }
+
+    .exp__item {
+      gap: 0;
+    }
+  }
+</style>

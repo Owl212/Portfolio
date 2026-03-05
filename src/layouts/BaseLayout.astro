@@ -103,13 +103,32 @@ const {
   })} />
 </head>
 <body>
+  <!-- Preloader -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader__inner">
+      <div class="preloader__logo">
+        <span class="preloader__bracket">&lt;</span><span class="preloader__name gradient-text">AK</span><span class="preloader__bracket"> /&gt;</span>
+      </div>
+      <div class="preloader__bar">
+        <div class="preloader__fill" id="preloader-fill"></div>
+      </div>
+      <span class="preloader__text" id="preloader-text">Initialisation...</span>
+    </div>
+  </div>
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
   <!-- Skip link -->
   <a href="#main-content" class="skip-link">Aller au contenu principal</a>
 
-  <!-- Background decorative orbs -->
+  <!-- Background decorative elements -->
   <div class="bg-grid" aria-hidden="true"></div>
+  <div class="noise-overlay" aria-hidden="true"></div>
   <div class="orb orb--1" aria-hidden="true"></div>
   <div class="orb orb--2" aria-hidden="true"></div>
+  <div class="orb orb--3" aria-hidden="true"></div>
+  <canvas class="mesh-gradient" id="mesh-gradient" aria-hidden="true"></canvas>
 
   <Header />
 
@@ -120,13 +139,60 @@ const {
   <Footer />
   <BackToTop />
 
-  <!-- Scroll reveal script -->
+  <!-- Preloader + Scroll Progress + Scroll Reveal Engine -->
   <script is:inline>
-    /* Scroll-reveal via IntersectionObserver */
+    /* === PRELOADER === */
     (function() {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
+      var fill = document.getElementById('preloader-fill');
+      var text = document.getElementById('preloader-text');
+      var preloader = document.getElementById('preloader');
+      var steps = ['Chargement des modules...', 'Compilation des shaders...', 'Rendu du DOM...', 'Prêt.'];
+      var progress = 0;
+
+      function tick() {
+        progress += Math.random() * 18 + 5;
+        if (progress > 100) progress = 100;
+        fill.style.width = progress + '%';
+        var stepIdx = Math.min(Math.floor(progress / 25), steps.length - 1);
+        text.textContent = steps[stepIdx];
+        if (progress < 100) {
+          setTimeout(tick, 150 + Math.random() * 200);
+        } else {
+          setTimeout(function() {
+            preloader.classList.add('preloader--done');
+            document.body.classList.remove('loading');
+            setTimeout(function() { preloader.style.display = 'none'; }, 700);
+          }, 300);
+        }
+      }
+
+      document.body.classList.add('loading');
+      tick();
+    })();
+
+    /* === SCROLL PROGRESS BAR === */
+    (function() {
+      var bar = document.getElementById('scroll-progress');
+      var ticking = false;
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(function() {
+            var scrollTop = window.scrollY;
+            var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            bar.style.width = progress + '%';
+            ticking = false;
+          });
+        }
+      }, { passive: true });
+    })();
+
+    /* === SCROLL REVEAL (multi-directional) === */
+    (function() {
+      var observer = new IntersectionObserver(
+        function(entries) {
+          entries.forEach(function(entry) {
             if (entry.isIntersecting) {
               entry.target.classList.add('revealed');
               observer.unobserve(entry.target);
@@ -137,7 +203,9 @@ const {
       );
 
       function observe() {
-        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(function(el) {
+          observer.observe(el);
+        });
       }
 
       if (document.readyState === 'loading') {
@@ -229,14 +297,14 @@ const {
     })();
   </script>
 
-  <!-- Gentlemates-Style Dynamism Engine -->
+  <!-- Dynamism Engine v2 — Preeminent Portfolio Interactions -->
   <script is:inline>
     (function() {
       var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
       /* ═══════════════════════════════════════════════════════════
-         1. CUSTOM CURSOR (desktop only)
+         1. CUSTOM CURSOR + TRAIL (desktop only)
          ═══════════════════════════════════════════════════════════ */
       if (!isTouch && !reduced) {
         var cursor = document.createElement('div');
@@ -246,10 +314,37 @@ const {
         document.body.appendChild(cursor);
         document.body.appendChild(cursorDot);
 
+        /* Trail particles */
+        var trailPool = [];
+        for (var t = 0; t < 6; t++) {
+          var particle = document.createElement('div');
+          particle.className = 'cursor-trail';
+          particle.style.opacity = '0';
+          document.body.appendChild(particle);
+          trailPool.push({ el: particle, x: 0, y: 0 });
+        }
+
         var cx = 0, cy = 0, dx = 0, dy = 0;
+        var trailIdx = 0;
+        var lastTrailTime = 0;
+
         document.addEventListener('mousemove', function(e) {
           cx = e.clientX; cy = e.clientY;
           cursorDot.style.transform = 'translate(' + cx + 'px,' + cy + 'px)';
+
+          /* Spawn trail particle */
+          var now = Date.now();
+          if (now - lastTrailTime > 40) {
+            lastTrailTime = now;
+            var p = trailPool[trailIdx % trailPool.length];
+            p.el.style.transform = 'translate(' + cx + 'px,' + cy + 'px) scale(1)';
+            p.el.style.opacity = '0.6';
+            setTimeout(function(el) {
+              el.style.opacity = '0';
+              el.style.transform = 'translate(' + cx + 'px,' + cy + 'px) scale(0)';
+            }.bind(null, p.el), 50);
+            trailIdx++;
+          }
         });
 
         (function lerp() {
@@ -271,7 +366,7 @@ const {
       }
 
       /* ═══════════════════════════════════════════════════════════
-         2. MAGNETIC BUTTONS (Gentlemates hover pull effect)
+         2. MAGNETIC BUTTONS
          ═══════════════════════════════════════════════════════════ */
       if (!isTouch && !reduced) {
         document.querySelectorAll('.magnetic-btn').forEach(function(btn) {
@@ -290,14 +385,13 @@ const {
       }
 
       /* ═══════════════════════════════════════════════════════════
-         3. SPLIT-TEXT CHARACTER REVEAL (e-sport title animation)
+         3. SPLIT-TEXT CHARACTER REVEAL
          ═══════════════════════════════════════════════════════════ */
       function initSplitText() {
         document.querySelectorAll('.split-text').forEach(function(el) {
           if (el.dataset.split) return;
           el.dataset.split = '1';
           var html = el.innerHTML;
-          /* Wrap each visible char in a span — preserve HTML tags */
           var inTag = false;
           var result = '';
           var charIndex = 0;
@@ -317,7 +411,7 @@ const {
       }
 
       /* ═══════════════════════════════════════════════════════════
-         4. COUNTER ANIMATION (stats numbers count up)
+         4. COUNTER ANIMATION
          ═══════════════════════════════════════════════════════════ */
       function animateCounters() {
         var counters = document.querySelectorAll('.hero__stat-value');
@@ -335,7 +429,7 @@ const {
             var start = performance.now();
             function tick(now) {
               var p = Math.min((now - start) / duration, 1);
-              var ease = 1 - Math.pow(1 - p, 3); /* ease-out cubic */
+              var ease = 1 - Math.pow(1 - p, 3);
               var current = Math.round(target * ease);
               el.textContent = current + suffix;
               if (p < 1) requestAnimationFrame(tick);
@@ -348,7 +442,7 @@ const {
       }
 
       /* ═══════════════════════════════════════════════════════════
-         5. PARALLAX SCROLL (sections & orbs move at different speeds)
+         5. PARALLAX SCROLL + SCROLL VELOCITY
          ═══════════════════════════════════════════════════════════ */
       if (!reduced) {
         var parallaxEls = [];
@@ -360,29 +454,66 @@ const {
               speed: parseFloat(el.dataset.parallax) || 0.1
             });
           });
-          /* Orbs get subtle parallax */
           document.querySelectorAll('.orb').forEach(function(el) {
             parallaxEls.push({ el: el, speed: 0.04 });
           });
         }
 
-        var ticking = false;
+        /* Scroll velocity tracker for marquees */
+        var lastScrollY = 0;
+        var scrollVelocity = 0;
+        var velTicking = false;
+
         window.addEventListener('scroll', function() {
-          if (!ticking) {
-            ticking = true;
+          if (!velTicking) {
+            velTicking = true;
             requestAnimationFrame(function() {
               var scrollY = window.scrollY;
+              scrollVelocity = Math.abs(scrollY - lastScrollY);
+              lastScrollY = scrollY;
+
+              /* Apply parallax */
               parallaxEls.forEach(function(p) {
                 p.el.style.transform = 'translateY(' + (scrollY * p.speed) + 'px)';
               });
-              ticking = false;
+
+              /* Dynamically speed up marquees based on scroll velocity */
+              var speedMultiplier = 1 + Math.min(scrollVelocity / 30, 3);
+              document.querySelectorAll('.marquee__track').forEach(function(track) {
+                var baseDuration = parseFloat(track.style.animationDuration) || 30;
+                track.style.animationDuration = (baseDuration / speedMultiplier) + 's';
+              });
+
+              /* Skew marquees with velocity (Awwwards effect) */
+              var skew = Math.min(scrollVelocity * 0.15, 5);
+              document.querySelectorAll('.marquee').forEach(function(m) {
+                m.style.transform = 'skewY(' + skew + 'deg)';
+              });
+
+              velTicking = false;
             });
           }
         }, { passive: true });
 
-        /* ═══════════════════════════════════════════════════════════
-           6. SECTION SCALE-IN (zoom from 0.96 as you scroll down)
-           ═══════════════════════════════════════════════════════════ */
+        /* Reset marquee speed/skew when scroll stops */
+        var scrollTimer;
+        window.addEventListener('scroll', function() {
+          clearTimeout(scrollTimer);
+          scrollTimer = setTimeout(function() {
+            document.querySelectorAll('.marquee__track').forEach(function(track) {
+              var d = track.closest('[data-speed]');
+              var base = d ? d.dataset.speed : '30';
+              track.style.animationDuration = base + 's';
+            });
+            document.querySelectorAll('.marquee').forEach(function(m) {
+              m.style.transform = 'skewY(0deg)';
+            });
+          }, 150);
+        }, { passive: true });
+
+        /* ═══════════════════════════════════════════════════════
+           6. SECTION SCALE-IN
+           ═══════════════════════════════════════════════════════ */
         var scaleObs = new IntersectionObserver(function(entries) {
           entries.forEach(function(entry) {
             if (entry.isIntersecting) {
@@ -400,7 +531,7 @@ const {
       }
 
       /* ═══════════════════════════════════════════════════════════
-         7. SMOOTH HOVER LINE on nav links (Gentlemates underline)
+         7. SMOOTH HOVER LINE
          ═══════════════════════════════════════════════════════════ */
       document.querySelectorAll('.header__link').forEach(function(link) {
         var line = document.createElement('span');
@@ -409,11 +540,83 @@ const {
       });
 
       /* ═══════════════════════════════════════════════════════════
-         8. INIT ALL
+         8. MESH GRADIENT CANVAS (interactive background)
+         ═══════════════════════════════════════════════════════════ */
+      if (!reduced && !isTouch) {
+        var canvas = document.getElementById('mesh-gradient');
+        if (canvas) {
+          var ctx = canvas.getContext('2d');
+          var w, h;
+          var mouseX = 0.5, mouseY = 0.5;
+          var points = [
+            { x: 0.1, y: 0.2, vx: 0.0003, vy: 0.0004, r: 200, color: 'rgba(99,102,241,0.08)' },
+            { x: 0.8, y: 0.3, vx: -0.0002, vy: 0.0003, r: 250, color: 'rgba(168,85,247,0.06)' },
+            { x: 0.5, y: 0.8, vx: 0.0004, vy: -0.0002, r: 220, color: 'rgba(236,72,153,0.05)' },
+          ];
+
+          function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+          }
+          resize();
+          window.addEventListener('resize', resize);
+
+          document.addEventListener('mousemove', function(e) {
+            mouseX = e.clientX / w;
+            mouseY = e.clientY / h;
+          });
+
+          function drawMesh() {
+            ctx.clearRect(0, 0, w, h);
+            points.forEach(function(p) {
+              p.x += p.vx + (mouseX - 0.5) * 0.0002;
+              p.y += p.vy + (mouseY - 0.5) * 0.0002;
+              if (p.x < 0 || p.x > 1) p.vx *= -1;
+              if (p.y < 0 || p.y > 1) p.vy *= -1;
+              p.x = Math.max(0, Math.min(1, p.x));
+              p.y = Math.max(0, Math.min(1, p.y));
+
+              var grad = ctx.createRadialGradient(p.x * w, p.y * h, 0, p.x * w, p.y * h, p.r);
+              grad.addColorStop(0, p.color);
+              grad.addColorStop(1, 'transparent');
+              ctx.fillStyle = grad;
+              ctx.fillRect(0, 0, w, h);
+            });
+            requestAnimationFrame(drawMesh);
+          }
+          drawMesh();
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         9. TEXT SCRAMBLE EFFECT on hero title
+         ═══════════════════════════════════════════════════════════ */
+      function initTextScramble() {
+        var el = document.querySelector('.hero__title-scramble');
+        if (!el) return;
+        var finalText = el.textContent || '';
+        var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*';
+        var iterations = 0;
+        var interval = setInterval(function() {
+          el.textContent = finalText.split('').map(function(char, i) {
+            if (i < iterations) return finalText[i];
+            return chars[Math.floor(Math.random() * chars.length)];
+          }).join('');
+          iterations += 1 / 2;
+          if (iterations >= finalText.length) {
+            el.textContent = finalText;
+            clearInterval(interval);
+          }
+        }, 30);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         10. INIT ALL
          ═══════════════════════════════════════════════════════════ */
       function initAll() {
         if (!reduced) initSplitText();
         animateCounters();
+        initTextScramble();
       }
 
       if (document.readyState === 'loading') {
@@ -923,5 +1126,215 @@ const {
      ═══════════════════════════════════════════════════════════════ */
   body.menu-open {
     overflow: hidden;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Preloader
+     ═══════════════════════════════════════════════════════════════ */
+  body.loading {
+    overflow: hidden;
+  }
+
+  .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+  }
+
+  .preloader--done {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .preloader__inner {
+    text-align: center;
+    width: 220px;
+  }
+
+  .preloader__logo {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+  }
+
+  .preloader__bar {
+    width: 100%;
+    height: 3px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  .preloader__fill {
+    height: 100%;
+    width: 0%;
+    background: var(--gradient-primary);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+
+  .preloader__text {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Scroll Progress Bar
+     ═══════════════════════════════════════════════════════════════ */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: var(--gradient-primary);
+    z-index: 10001;
+    pointer-events: none;
+    transition: width 0.1s linear;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Noise Overlay
+     ═══════════════════════════════════════════════════════════════ */
+  .noise-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Mesh Gradient Canvas
+     ═══════════════════════════════════════════════════════════════ */
+  .mesh-gradient {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Cursor Trail Particles
+     ═══════════════════════════════════════════════════════════════ */
+  .cursor-trail {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    pointer-events: none;
+    z-index: 99998;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    mix-blend-mode: screen;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Multi-Directional Reveal Variants
+     ═══════════════════════════════════════════════════════════════ */
+  .reveal-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
+  }
+
+  .reveal-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
+  }
+
+  .reveal-scale {
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
+  }
+
+  .reveal-left.revealed,
+  .reveal-right.revealed,
+  .reveal-scale.revealed {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Third Orb
+     ═══════════════════════════════════════════════════════════════ */
+  .orb--3 {
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.15), transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: orb-drift-3 22s ease-in-out infinite;
+  }
+
+  @keyframes orb-drift-3 {
+    0%, 100% { transform: translate(-50%, -50%); }
+    33% { transform: translate(calc(-50% + 60px), calc(-50% - 80px)); }
+    66% { transform: translate(calc(-50% - 40px), calc(-50% + 40px)); }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Marquee Scroll-Velocity Transition
+     ═══════════════════════════════════════════════════════════════ */
+  .marquee__track {
+    transition: transform 0.3s ease;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Reduced Motion: Disable new heavy features
+     ═══════════════════════════════════════════════════════════════ */
+  @media (prefers-reduced-motion: reduce) {
+    .preloader { display: none !important; }
+    .scroll-progress { display: none !important; }
+    .noise-overlay { display: none !important; }
+    .mesh-gradient { display: none !important; }
+    .cursor-trail { display: none !important; }
+    .orb--3 { display: none !important; }
+    .reveal-left, .reveal-right, .reveal-scale {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Mobile: Disable desktop-only features
+     ═══════════════════════════════════════════════════════════════ */
+  @media (max-width: 768px) {
+    .custom-cursor,
+    .custom-cursor__dot,
+    .cursor-trail,
+    .mesh-gradient {
+      display: none !important;
+    }
   }
 </style>

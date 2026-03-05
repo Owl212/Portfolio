@@ -115,10 +115,10 @@ export const personalInfo: PersonalInfo = {
 /* ── Stats ──────────────────────────────────────────────────────── */
 
 export const stats: Stat[] = [
-  { label: 'Systèmes Optimisés', value: '6+' },
-  { label: 'Stack Technique', value: '12+' },
+  { label: 'Projets Livrés', value: '6' },
+  { label: 'Technologies', value: '15+' },
   { label: 'Domaines Croisés', value: '3' },
-  { label: 'Lignes Analysées', value: '10K+' },
+  { label: 'Commits GitHub', value: '120+' },
 ];
 
 /* ── About ──────────────────────────────────────────────────────── */
@@ -144,7 +144,7 @@ export const techSkills: TechSkillCategory[] = [
   {
     category: 'Développement & Informatique',
     icon: 'code',
-    skills: ['Langage C', 'Algorithmique avancée', 'Structures de données', 'Architecture microprocesseurs', 'Électronique numérique', 'Prompt Engineering IA'],
+    skills: ['Langage C', 'TypeScript', 'Next.js', 'Astro', 'Algorithmique avancée', 'Structures de données', 'Architecture microprocesseurs', 'Prompt Engineering IA'],
     image: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=600&h=400&fit=crop',
   },
   {
@@ -197,9 +197,30 @@ export const education: Education[] = [
   },
 ];
 
-/* ── Expériences (optionnel — vide = section masquée) ───────────── */
+/* ── Expériences ────────────────────────────────────────────────── */
 
-export const experiences: Experience[] = [];
+export const experiences: Experience[] = [
+  {
+    period: 'Sep 2024 – Présent',
+    role: 'Développeur Full-Stack & Projets Académiques',
+    company: 'ESISA — Travaux Pratiques',
+    companyUrl: 'https://www.esisa.ac.ma',
+    description: 'Conception et déploiement d\'applications web complètes (Next.js, Astro, TypeScript). Développement de TP avancés en C : gestion mémoire, structures de données, benchmarking d\'algorithmes. Architecture d\'APIs REST avec authentification multi-couches.',
+    isCurrent: true,
+  },
+  {
+    period: 'Jan 2024 – Août 2024',
+    role: 'Ingénieur Audio Indépendant',
+    company: 'Freelance',
+    description: 'Architecture de systèmes de traitement audio temps réel : routage multi-canal Voicemeeter Potato, égalisation paramétrique Equalizer APO, chaîne de production FL Studio. Clients : créateurs de contenu et streamers. Latence optimisée < 10ms.',
+  },
+  {
+    period: 'Sep 2023 – Juin 2024',
+    role: 'Analyste Technique — Marchés Financiers',
+    company: 'Auto-formation & Paper Trading',
+    description: 'Étude approfondie des marchés (Nasdaq 100) via Smart Money Concepts : identification d\'Order Blocks, Fair Value Gaps, déséquilibres de liquidité. Développement d\'un journal de trading quantitatif avec suivi des performances.',
+  },
+];
 
 /* ── Publications (optionnel — vide = section masquée) ──────────── */
 // Aucune publication → section masquée automatiquement
