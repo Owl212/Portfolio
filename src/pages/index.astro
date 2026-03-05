@@ -4,6 +4,7 @@
  * ─────────────────────────────────────────────────────────────────
  * Page d'accueil : assemble le layout et tous les composants
  * actifs (les sections vides sont déjà masquées par chaque composant).
+ * Marquees Gentlemates-style entre les sections.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero      from '../components/Hero.astro';
@@ -12,13 +13,17 @@ import Skills    from '../components/Skills.astro';
 import Education from '../components/Education.astro';
 import Projects  from '../components/Projects.astro';
 import Contact   from '../components/Contact.astro';
+import Marquee   from '../components/Marquee.astro';
 ---
 
 <BaseLayout>
   <Hero />
+  <Marquee items={['Systems Optimizer', 'Low-Level Engineering', 'Signal Processing', 'Market Analysis', 'Full-Stack', 'Audio DSP', 'CPU Architecture']} speed={35} direction="left" variant="primary" />
   <About />
   <Skills />
+  <Marquee items={['C', 'TypeScript', 'Astro', 'Next.js', 'FL Studio', 'Git', 'Voicemeeter', 'SQLite', 'Vercel', 'Smart Money']} speed={25} direction="right" variant="accent" />
   <Education />
   <Projects />
+  <Marquee items={['Open to Opportunities', 'Fès, Maroc', 'ESISA', 'Pensée Systémique', 'Rigueur Scientifique', 'Vision Transversale']} speed={30} direction="left" variant="primary" />
   <Contact />
 </BaseLayout>

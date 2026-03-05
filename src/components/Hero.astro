@@ -35,7 +35,7 @@ function getIcon(name: string): string {
         </div>
 
         <!-- Name -->
-        <h1 class="hero__name reveal">
+        <h1 class="hero__name reveal split-text">
           <span class="gradient-text">{personalInfo.firstName}</span>
           <br />
           {personalInfo.lastName}
@@ -51,13 +51,13 @@ function getIcon(name: string): string {
 
         <!-- Action buttons -->
         <div class="hero__actions reveal">
-          <a href="#projects" class="hero__btn hero__btn--primary">
+          <a href="#projects" class="hero__btn hero__btn--primary magnetic-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <Fragment set:html={getIcon('folder-open')} />
             </svg>
             Voir mes Projets
           </a>
-          <a href="#contact" class="hero__btn hero__btn--secondary">
+          <a href="#contact" class="hero__btn hero__btn--secondary magnetic-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <Fragment set:html={getIcon('send')} />
             </svg>

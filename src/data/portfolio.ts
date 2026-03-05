@@ -34,6 +34,7 @@ export interface TechSkillCategory {
   category: string;
   icon: string;
   skills: string[];
+  image?: string;
 }
 
 export interface SoftSkill {
@@ -67,6 +68,7 @@ export interface Project {
   tags: string[];
   url?: string;
   github?: string;
+  image?: string;
 }
 
 export interface Certification {
@@ -143,21 +145,25 @@ export const techSkills: TechSkillCategory[] = [
     category: 'Développement & Informatique',
     icon: 'code',
     skills: ['Langage C', 'Algorithmique avancée', 'Structures de données', 'Architecture microprocesseurs', 'Électronique numérique', 'Prompt Engineering IA'],
+    image: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=600&h=400&fit=crop',
   },
   {
     category: 'Ingénierie Audio',
     icon: 'music',
     skills: ['FL Studio (DAW)', 'Voicemeeter', 'Equalizer APO', 'Mixage & Mastering', 'Routage audio', 'Traitement du signal'],
+    image: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=600&h=400&fit=crop',
   },
   {
     category: 'Analyse & Finance',
     icon: 'trending-up',
     skills: ['Analyse technique', 'Nasdaq 100', 'Smart Money Concepts', 'Order Blocks', 'Fair Value Gaps'],
+    image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&h=400&fit=crop',
   },
   {
     category: 'Outils & Environnement',
     icon: 'terminal',
     skills: ['Git & GitHub', 'VS Code', 'Windows', 'NPM', 'Vercel'],
+    image: 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=600&h=400&fit=crop',
   },
 ];
 
@@ -207,6 +213,7 @@ export const projects: Project[] = [
     tags: ['Next.js', 'TypeScript', 'SQLite', 'NextAuth', 'Vercel CI/CD'],
     url: 'https://sm5-topaz.vercel.app',
     github: 'https://github.com/Owl212/sm',
+    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=400&fit=crop',
   },
   {
     title: 'Portfolio — Security-Hardened Static Site',
@@ -214,26 +221,31 @@ export const projects: Project[] = [
     tags: ['Astro', 'TypeScript', 'CSP Level 3', 'HSTS', 'Vercel Edge'],
     url: 'https://portfolio-abdelaziz-khoungui.vercel.app',
     github: 'https://github.com/Owl212/Portfolio',
+    image: 'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=600&h=400&fit=crop',
   },
   {
     title: 'Optimisation Mémoire — Étude de cas C',
     description: 'Étude systématique de la gestion mémoire en C : allocation dynamique (malloc/realloc/free), listes chaînées avec gestion des fuites, manipulation de matrices NxN, et benchmarking d\'algorithmes de tri (QuickSort vs MergeSort vs HeapSort sur datasets de 10K+ éléments).',
     tags: ['C', 'Gestion mémoire', 'Complexité algorithmique', 'Benchmarking'],
+    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=400&fit=crop',
   },
   {
     title: 'Architecture CPU — Pipeline & Performance',
     description: 'Analyse approfondie des architectures processeur : traduction de jeux d\'instructions (MIPS), optimisation des modes d\'adressage, résolution de hazards dans le pipeline (data forwarding, branch prediction), et calcul de CPI effectif sur des séquences d\'instructions réelles.',
     tags: ['Architecture MIPS', 'Pipeline CPU', 'Branch Prediction', 'CPI Analysis'],
+    image: 'https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=600&h=400&fit=crop',
   },
   {
     title: 'Recherche Quantitative — Méthodologie Statistique',
     description: 'Conception et conduite d\'une enquête de recherche sur l\'égalité professionnelle (n=200+). Méthodologie rigoureuse : élaboration du questionnaire, échantillonnage stratifié, analyse de corrélation, tests d\'hypothèses et visualisation des résultats. Rapport de recherche de 40+ pages.',
     tags: ['Méthodologie statistique', 'Analyse quantitative', 'Data Visualization', 'Recherche'],
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop',
   },
   {
     title: 'Ingénierie Audio Temps Réel',
     description: 'Architecture d\'un système de traitement audio multi-couche : routage virtuel 8 canaux via Voicemeeter Potato, égalisation paramétrique 31 bandes avec Equalizer APO, et chaîne de production complète dans FL Studio (composition, arrangement, mixage, mastering). Latence optimisée < 10ms.',
     tags: ['DSP', 'Voicemeeter Potato', 'Equalizer APO', 'FL Studio', 'Low Latency'],
+    image: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=600&h=400&fit=crop',
   },
 ];
 

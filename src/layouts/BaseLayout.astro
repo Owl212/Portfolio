@@ -228,6 +228,201 @@ const {
       }
     })();
   </script>
+
+  <!-- Gentlemates-Style Dynamism Engine -->
+  <script is:inline>
+    (function() {
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+      /* ═══════════════════════════════════════════════════════════
+         1. CUSTOM CURSOR (desktop only)
+         ═══════════════════════════════════════════════════════════ */
+      if (!isTouch && !reduced) {
+        var cursor = document.createElement('div');
+        cursor.className = 'custom-cursor';
+        var cursorDot = document.createElement('div');
+        cursorDot.className = 'custom-cursor__dot';
+        document.body.appendChild(cursor);
+        document.body.appendChild(cursorDot);
+
+        var cx = 0, cy = 0, dx = 0, dy = 0;
+        document.addEventListener('mousemove', function(e) {
+          cx = e.clientX; cy = e.clientY;
+          cursorDot.style.transform = 'translate(' + cx + 'px,' + cy + 'px)';
+        });
+
+        (function lerp() {
+          dx += (cx - dx) * 0.12;
+          dy += (cy - dy) * 0.12;
+          cursor.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+          requestAnimationFrame(lerp);
+        })();
+
+        /* Cursor expand on interactive elements */
+        document.addEventListener('mouseover', function(e) {
+          var t = e.target.closest('a, button, [data-tilt], .magnetic-btn, input, textarea');
+          if (t) cursor.classList.add('custom-cursor--active');
+        });
+        document.addEventListener('mouseout', function(e) {
+          var t = e.target.closest('a, button, [data-tilt], .magnetic-btn, input, textarea');
+          if (t) cursor.classList.remove('custom-cursor--active');
+        });
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         2. MAGNETIC BUTTONS (Gentlemates hover pull effect)
+         ═══════════════════════════════════════════════════════════ */
+      if (!isTouch && !reduced) {
+        document.querySelectorAll('.magnetic-btn').forEach(function(btn) {
+          btn.addEventListener('mousemove', function(e) {
+            var rect = btn.getBoundingClientRect();
+            var mx = e.clientX - rect.left - rect.width / 2;
+            var my = e.clientY - rect.top - rect.height / 2;
+            btn.style.transform = 'translate(' + (mx * 0.25) + 'px,' + (my * 0.25) + 'px)';
+          });
+          btn.addEventListener('mouseleave', function() {
+            btn.style.transition = 'transform 0.5s cubic-bezier(0.34,1.56,0.64,1)';
+            btn.style.transform = 'translate(0,0)';
+            setTimeout(function() { btn.style.transition = ''; }, 500);
+          });
+        });
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         3. SPLIT-TEXT CHARACTER REVEAL (e-sport title animation)
+         ═══════════════════════════════════════════════════════════ */
+      function initSplitText() {
+        document.querySelectorAll('.split-text').forEach(function(el) {
+          if (el.dataset.split) return;
+          el.dataset.split = '1';
+          var html = el.innerHTML;
+          /* Wrap each visible char in a span — preserve HTML tags */
+          var inTag = false;
+          var result = '';
+          var charIndex = 0;
+          for (var i = 0; i < html.length; i++) {
+            if (html[i] === '<') { inTag = true; result += html[i]; continue; }
+            if (html[i] === '>') { inTag = false; result += html[i]; continue; }
+            if (inTag) { result += html[i]; continue; }
+            if (html[i] === ' ') {
+              result += ' ';
+            } else {
+              result += '<span class="split-char" style="animation-delay:' + (charIndex * 30) + 'ms">' + html[i] + '</span>';
+              charIndex++;
+            }
+          }
+          el.innerHTML = result;
+        });
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         4. COUNTER ANIMATION (stats numbers count up)
+         ═══════════════════════════════════════════════════════════ */
+      function animateCounters() {
+        var counters = document.querySelectorAll('.hero__stat-value');
+        var counterObs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (!entry.isIntersecting) return;
+            var el = entry.target;
+            counterObs.unobserve(el);
+            var text = el.textContent || '';
+            var match = text.match(/(\d+)/);
+            if (!match) return;
+            var target = parseInt(match[1]);
+            var suffix = text.replace(match[1], '');
+            var duration = 1500;
+            var start = performance.now();
+            function tick(now) {
+              var p = Math.min((now - start) / duration, 1);
+              var ease = 1 - Math.pow(1 - p, 3); /* ease-out cubic */
+              var current = Math.round(target * ease);
+              el.textContent = current + suffix;
+              if (p < 1) requestAnimationFrame(tick);
+            }
+            el.textContent = '0' + suffix;
+            requestAnimationFrame(tick);
+          });
+        }, { threshold: 0.5 });
+        counters.forEach(function(c) { counterObs.observe(c); });
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         5. PARALLAX SCROLL (sections & orbs move at different speeds)
+         ═══════════════════════════════════════════════════════════ */
+      if (!reduced) {
+        var parallaxEls = [];
+        function initParallax() {
+          parallaxEls = [];
+          document.querySelectorAll('[data-parallax]').forEach(function(el) {
+            parallaxEls.push({
+              el: el,
+              speed: parseFloat(el.dataset.parallax) || 0.1
+            });
+          });
+          /* Orbs get subtle parallax */
+          document.querySelectorAll('.orb').forEach(function(el) {
+            parallaxEls.push({ el: el, speed: 0.04 });
+          });
+        }
+
+        var ticking = false;
+        window.addEventListener('scroll', function() {
+          if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(function() {
+              var scrollY = window.scrollY;
+              parallaxEls.forEach(function(p) {
+                p.el.style.transform = 'translateY(' + (scrollY * p.speed) + 'px)';
+              });
+              ticking = false;
+            });
+          }
+        }, { passive: true });
+
+        /* ═══════════════════════════════════════════════════════════
+           6. SECTION SCALE-IN (zoom from 0.96 as you scroll down)
+           ═══════════════════════════════════════════════════════════ */
+        var scaleObs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('section-visible');
+            }
+          });
+        }, { threshold: 0.05, rootMargin: '0px 0px -10% 0px' });
+
+        document.querySelectorAll('.section-wrapper').forEach(function(s) {
+          s.classList.add('section-scale');
+          scaleObs.observe(s);
+        });
+
+        initParallax();
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         7. SMOOTH HOVER LINE on nav links (Gentlemates underline)
+         ═══════════════════════════════════════════════════════════ */
+      document.querySelectorAll('.header__link').forEach(function(link) {
+        var line = document.createElement('span');
+        line.className = 'hover-line';
+        link.appendChild(line);
+      });
+
+      /* ═══════════════════════════════════════════════════════════
+         8. INIT ALL
+         ═══════════════════════════════════════════════════════════ */
+      function initAll() {
+        if (!reduced) initSplitText();
+        animateCounters();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAll);
+      } else {
+        initAll();
+      }
+    })();
+  </script>
 </body>
 </html>
 
@@ -567,6 +762,123 @@ const {
       transition: none !important;
     }
     .tilt-glare {
+      display: none !important;
+    }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Custom Cursor (Gentlemates-style)
+     ═══════════════════════════════════════════════════════════════ */
+  .custom-cursor {
+    position: fixed;
+    top: -20px;
+    left: -20px;
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(99, 102, 241, 0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    mix-blend-mode: difference;
+  }
+
+  .custom-cursor--active {
+    width: 60px;
+    height: 60px;
+    top: -30px;
+    left: -30px;
+    border-color: rgba(168, 85, 247, 0.8);
+    background: rgba(168, 85, 247, 0.08);
+  }
+
+  .custom-cursor__dot {
+    position: fixed;
+    top: -4px;
+    left: -4px;
+    width: 8px;
+    height: 8px;
+    background: var(--primary-light);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 100000;
+  }
+
+  /* Hide default cursor when custom cursor is active */
+  @media (hover: hover) and (pointer: fine) {
+    body {
+      cursor: none;
+    }
+    a, button, input, textarea, [data-tilt], .magnetic-btn {
+      cursor: none;
+    }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Split Text Character Reveal
+     ═══════════════════════════════════════════════════════════════ */
+  .split-char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(30px) rotateX(-40deg);
+    animation: char-reveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes char-reveal {
+    to {
+      opacity: 1;
+      transform: translateY(0) rotateX(0);
+    }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Section Scale-In (zoom from 0.96 → 1)
+     ═══════════════════════════════════════════════════════════════ */
+  .section-scale {
+    opacity: 0.3;
+    transform: scale(0.96) translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .section-scale.section-visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Nav Hover Line (Gentlemates-style underline)
+     ═══════════════════════════════════════════════════════════════ */
+  .hover-line {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--gradient-primary);
+    border-radius: 1px;
+    transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+  }
+
+  .header__link:hover .hover-line,
+  .header__link.active .hover-line {
+    width: 100%;
+    left: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .split-char {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: none !important;
+    }
+    .section-scale {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+    .custom-cursor, .custom-cursor__dot {
       display: none !important;
     }
   }

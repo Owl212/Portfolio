@@ -1,0 +1,100 @@
+---
+/**
+ * Marquee.astro
+ * ─────────────────────────────────────────────────────────────────
+ * Bande défilante infinie style Gentlemates / e-sport premium.
+ * Double le contenu pour un loop seamless.
+ * Props : items (string[]), speed (s), direction (left|right), variant (primary|accent).
+ */
+interface Props {
+  items: string[];
+  speed?: number;
+  direction?: 'left' | 'right';
+  variant?: 'primary' | 'accent';
+}
+
+const {
+  items,
+  speed = 30,
+  direction = 'left',
+  variant = 'primary',
+} = Astro.props;
+
+const content = items.join(' ✦ ') + ' ✦ ';
+---
+
+<div class={`marquee marquee--${variant}`} aria-hidden="true" data-marquee data-speed={speed}>
+  <div class={`marquee__track ${direction === 'right' ? 'marquee__track--reverse' : ''}`} style={`animation-duration: ${speed}s`}>
+    <span class="marquee__text">{content}</span>
+    <span class="marquee__text">{content}</span>
+  </div>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 1rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    user-select: none;
+  }
+
+  .marquee--primary {
+    background: rgba(99, 102, 241, 0.03);
+  }
+
+  .marquee--accent {
+    background: rgba(168, 85, 247, 0.03);
+  }
+
+  .marquee__track {
+    display: inline-flex;
+    animation: marquee-scroll linear infinite;
+    will-change: transform;
+  }
+
+  .marquee__track--reverse {
+    animation-direction: reverse;
+  }
+
+  .marquee__text {
+    font-family: var(--font-mono);
+    font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding-right: 2rem;
+    background: var(--gradient-text);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-shift 4s ease-in-out infinite;
+  }
+
+  .marquee--accent .marquee__text {
+    background: linear-gradient(135deg, #a855f7, #ec4899, #6366f1, #a855f7);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  @keyframes marquee-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* Pause on hover for accessibility */
+  .marquee:hover .marquee__track {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__track {
+      animation: none;
+    }
+  }
+</style>
