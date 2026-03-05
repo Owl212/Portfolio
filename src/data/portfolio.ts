@@ -244,7 +244,7 @@ export const projects: Project[] = [
     title: 'Portfolio — Security-Hardened Static Site',
     description: 'Site statique Astro avec score Lighthouse 100/100. Architecture data-driven (source unique TypeScript), CSP Level 3, HSTS preload, headers OWASP, glassmorphism CSS pur sans dépendances runtime. Zéro JavaScript tiers.',
     tags: ['Astro', 'TypeScript', 'CSP Level 3', 'HSTS', 'Vercel Edge'],
-    url: 'https://portfolio-abdelaziz-khoungui.vercel.app',
+    url: 'https://portfolio-uhqy.vercel.app',
     github: 'https://github.com/Owl212/Portfolio',
     image: 'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=600&h=400&fit=crop',
   },

@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 
 export default defineConfig({
   output: 'static',
-  site: 'https://portfolio-abdelaziz-khoungui.vercel.app',
+  site: 'https://portfolio-uhqy.vercel.app',
   build: {
     inlineStylesheets: 'always',
   },

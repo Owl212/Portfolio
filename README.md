@@ -4,7 +4,7 @@ Portfolio professionnel construit avec **Astro**, déployé sur **Vercel**.
 
 ## 🔗 Liens
 
-- **Live** : [portfolio-abdelaziz-khoungui.vercel.app](https://portfolio-abdelaziz-khoungui.vercel.app)
+- **Live** : [portfolio-uhqy.vercel.app](https://portfolio-uhqy.vercel.app)
 - **Repo** : [github.com/Owl212/Portfolio](https://github.com/Owl212/Portfolio)
 
 ## ⚡ Stack
