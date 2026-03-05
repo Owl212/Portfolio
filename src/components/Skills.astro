@@ -408,11 +408,11 @@ const hasSoftSkills = softSkills.length > 0;
 
   /* Cap (top of bottle) */
   .bottle__cap {
-    width: 24px;
-    height: 14px;
+    width: 32px;
+    height: 18px;
     background: var(--bg-glass);
     border: 2px solid var(--bottle-color);
-    border-radius: 6px 6px 2px 2px;
+    border-radius: 8px 8px 3px 3px;
     margin-bottom: -2px;
     z-index: 2;
     transition: background 0.3s ease;
@@ -420,8 +420,8 @@ const hasSoftSkills = softSkills.length > 0;
 
   /* Body (main shape) */
   .bottle__body {
-    width: clamp(70px, 10vw, 100px);
-    height: clamp(120px, 18vw, 170px);
+    width: clamp(100px, 13vw, 140px);
+    height: clamp(170px, 22vw, 230px);
     background: linear-gradient(
       180deg,
       color-mix(in srgb, var(--bottle-color) 15%, transparent),
@@ -483,7 +483,7 @@ const hasSoftSkills = softSkills.length > 0;
   }
 
   .bottle__emoji {
-    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
     z-index: 1;
     filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
     transition: transform 0.3s ease;
@@ -496,14 +496,14 @@ const hasSoftSkills = softSkills.length > 0;
 
   /* Label below bottle */
   .bottle__label {
-    margin-top: 0.75rem;
+    margin-top: 1rem;
     text-align: center;
-    max-width: clamp(70px, 10vw, 100px);
+    max-width: clamp(100px, 13vw, 140px);
   }
 
   .bottle__name {
     font-family: var(--font-mono);
-    font-size: clamp(0.65rem, 1.2vw, 0.78rem);
+    font-size: clamp(0.75rem, 1.4vw, 0.9rem);
     font-weight: 600;
     color: var(--text-secondary);
     letter-spacing: 0.02em;
@@ -614,8 +614,8 @@ const hasSoftSkills = softSkills.length > 0;
     }
 
     .bottle__body {
-      width: 65px;
-      height: 110px;
+      width: 85px;
+      height: 145px;
     }
 
     .shelf__panel--open {
