@@ -3,7 +3,7 @@
  * Skills.astro
  * ─────────────────────────────────────────────────────────────────
  * Compétences techniques en grille de cartes avec icônes Lucide,
- * chips, et compteur. Soft skills en grille horizontale (optionnel).
+ * chips, et compteur. Soft skills en slider Kombucha interactif.
  */
 import { techSkills, softSkills } from '../data/portfolio';
 
@@ -12,10 +12,6 @@ const icons: Record<string, string> = {
   'music': '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
   'trending-up': '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',
   'terminal': '<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>',
-  'brain': '<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"/><path d="M3.477 10.896a4 4 0 0 1 .585-.396"/><path d="M19.938 10.5a4 4 0 0 1 .585.396"/><path d="M6 18a4 4 0 0 1-1.967-.516"/><path d="M19.967 17.484A4 4 0 0 1 18 18"/>',
-  'shield-check': '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/>',
-  'book-open': '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
-  'sparkles': '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>',
 };
 
 function getIcon(name: string): string {
@@ -70,123 +66,316 @@ const hasSoftSkills = softSkills.length > 0;
     <>
       <div class="divider-label reveal">Soft Skills</div>
 
-      <!-- Ciao Kombucha-style shelf -->
-      <div class="shelf reveal">
-        <div class="shelf__row">
-          {softSkills.map((skill, i) => (
-            <button
-              class="bottle"
-              data-index={i}
-              style={`--bottle-color: ${skill.color}; --bottle-delay: ${i * 80}ms`}
-              aria-expanded="false"
-              aria-label={`Voir la définition de ${skill.name}`}
-            >
-              <div class="bottle__shape">
-                <div class="bottle__cap"></div>
-                <div class="bottle__body">
-                  <span class="bottle__emoji">{skill.emoji}</span>
-                </div>
-                <div class="bottle__label">
-                  <span class="bottle__name">{skill.name}</span>
-                </div>
-                <div class="bottle__shadow"></div>
-              </div>
-            </button>
+      <!-- Kombucha Interactive Slider -->
+      <div class="kombucha" id="kombucha-slider">
+        <!-- Background layer -->
+        <div class="kombucha__bg">
+          {softSkills.map((s, i) => (
+            <div
+              class={`kombucha__bg-img ${i === 0 ? 'kombucha__bg-img--active' : ''}`}
+              data-bg-index={i}
+              style={`background-image: url('${s.bgImage}');`}
+            ></div>
           ))}
+          <div class="kombucha__bg-blur"></div>
+          <div class="kombucha__bg-overlay"></div>
         </div>
 
-        <!-- Definition panel (shown on click) -->
-        <div class="shelf__panel" id="soft-panel" aria-hidden="true">
-          <button class="shelf__panel-close" aria-label="Fermer">&times;</button>
-          <div class="shelf__panel-emoji" id="panel-emoji"></div>
-          <h4 class="shelf__panel-title" id="panel-title"></h4>
-          <p class="shelf__panel-desc" id="panel-desc"></p>
+        <!-- Carousel view -->
+        <div class="kombucha__carousel" id="kombucha-carousel">
+          <!-- Prev / Next arrows -->
+          <button class="kombucha__arrow kombucha__arrow--prev" id="kb-prev" aria-label="Précédent">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="kombucha__arrow kombucha__arrow--next" id="kb-next" aria-label="Suivant">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+
+          <!-- Bottle stage -->
+          <div class="kombucha__stage" id="kb-stage">
+            {softSkills.map((s, i) => (
+              <div
+                class={`kb-bottle ${i === 0 ? 'kb-bottle--active' : ''}`}
+                data-bottle-index={i}
+                style={`--bc: ${s.color}; --bc-light: ${s.colorLight};`}
+              >
+                <!-- 3D CSS Bottle -->
+                <div class="kb-bottle__vessel">
+                  <div class="kb-bottle__cap"></div>
+                  <div class="kb-bottle__neck"></div>
+                  <div class="kb-bottle__body">
+                    <div class="kb-bottle__glass-shine"></div>
+                    <div class="kb-bottle__liquid"></div>
+                    <div class="kb-bottle__label">
+                      <span class="kb-bottle__keyword">{s.keyword}</span>
+                      <span class="kb-bottle__ingredients">{s.ingredients}</span>
+                      <span class="kb-bottle__volume">330ml</span>
+                    </div>
+                  </div>
+                </div>
+                <span class="kb-bottle__concept-name">{s.name}</span>
+              </div>
+            ))}
+          </div>
+
+          <!-- Dots -->
+          <div class="kombucha__dots" id="kb-dots">
+            {softSkills.map((s, i) => (
+              <button
+                class={`kombucha__dot ${i === 0 ? 'kombucha__dot--active' : ''}`}
+                data-dot={i}
+                style={`--dot-c: ${s.color};`}
+                aria-label={`Bouteille ${i + 1}`}
+              ></button>
+            ))}
+          </div>
+
+          <!-- Tap hint -->
+          <div class="kombucha__hint" id="kb-hint">
+            <span>Cliquez sur la bouteille pour découvrir</span>
+          </div>
+        </div>
+
+        <!-- Detail panel (slides in from right on click) -->
+        <div class="kombucha__detail" id="kb-detail">
+          <button class="kombucha__detail-close" id="kb-close" aria-label="Fermer">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <div class="kombucha__detail-inner">
+            <span class="kombucha__detail-emoji" id="kb-d-emoji"></span>
+            <h3 class="kombucha__detail-title" id="kb-d-title"></h3>
+            <p class="kombucha__detail-ingredients" id="kb-d-ingredients"></p>
+            <p class="kombucha__detail-desc" id="kb-d-desc"></p>
+            <div class="kombucha__detail-nav">
+              <button class="kombucha__detail-navbtn" id="kb-d-prev" aria-label="Précédent">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                Précédent
+              </button>
+              <button class="kombucha__detail-navbtn" id="kb-d-next" aria-label="Suivant">
+                Suivant
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
+      <!-- Hidden data for client script -->
+      <script type="application/json" id="soft-skills-data" set:html={JSON.stringify(softSkills.map(s => ({
+        name: s.name,
+        keyword: s.keyword,
+        description: s.description,
+        emoji: s.emoji,
+        color: s.color,
+        colorLight: s.colorLight,
+        ingredients: s.ingredients
+      })))} />
+
       <script is:inline>
-        (function() {
-          var softData = [];
-          var bottles = document.querySelectorAll('.bottle');
-          var panel = document.getElementById('soft-panel');
-          var emojiEl = document.getElementById('panel-emoji');
-          var titleEl = document.getElementById('panel-title');
-          var descEl = document.getElementById('panel-desc');
-          var activeBottle = null;
+      (function() {
+        var data = JSON.parse(document.getElementById('soft-skills-data').textContent);
+        var total = data.length;
+        var current = 0;
+        var isDetailOpen = false;
 
-          /* Collect data from the server-rendered attributes — we pass via hidden spans */
-          bottles.forEach(function(b) {
-            /* We'll use a different approach: read from a global array */
+        // DOM refs
+        var slider = document.getElementById('kombucha-slider');
+        var carousel = document.getElementById('kombucha-carousel');
+        var stage = document.getElementById('kb-stage');
+        var bottles = stage.querySelectorAll('.kb-bottle');
+        var bgImgs = slider.querySelectorAll('.kombucha__bg-img');
+        var bgBlur = slider.querySelector('.kombucha__bg-blur');
+        var bgOverlay = slider.querySelector('.kombucha__bg-overlay');
+        var dots = document.querySelectorAll('.kombucha__dot');
+        var detail = document.getElementById('kb-detail');
+        var hint = document.getElementById('kb-hint');
+
+        // Detail elements
+        var dEmoji = document.getElementById('kb-d-emoji');
+        var dTitle = document.getElementById('kb-d-title');
+        var dIngredients = document.getElementById('kb-d-ingredients');
+        var dDesc = document.getElementById('kb-d-desc');
+
+        // ── Navigate to bottle ──
+        function goTo(idx, animate) {
+          if (idx < 0) idx = total - 1;
+          if (idx >= total) idx = 0;
+          current = idx;
+
+          // Update bottles
+          bottles.forEach(function(b, i) {
+            b.classList.toggle('kb-bottle--active', i === idx);
+            // Positioning: active = center, others offset
+            var diff = i - idx;
+            if (diff > total / 2) diff -= total;
+            if (diff < -total / 2) diff += total;
+            var tx = diff * 160;
+            var sc = Math.abs(diff) === 0 ? 1 : Math.max(0.5, 1 - Math.abs(diff) * 0.2);
+            var op = Math.abs(diff) === 0 ? 1 : Math.max(0.3, 1 - Math.abs(diff) * 0.35);
+            var tz = Math.abs(diff) === 0 ? 0 : -Math.abs(diff) * 80;
+            b.style.transform = 'translateX(' + tx + 'px) scale(' + sc + ') translateZ(' + tz + 'px)';
+            b.style.opacity = op;
+            b.style.zIndex = 10 - Math.abs(diff);
+            b.style.pointerEvents = Math.abs(diff) === 0 ? 'auto' : 'none';
+            b.style.filter = Math.abs(diff) === 0 ? 'none' : 'brightness(0.6)';
           });
 
-          /* We inject the data inline since this is static */
-          softData = JSON.parse(document.getElementById('soft-skills-data').textContent);
-
-          bottles.forEach(function(b, idx) {
-            /* Wiggle on hover (Ciao Kombucha effect) */
-            b.addEventListener('mouseenter', function() {
-              b.classList.add('bottle--wiggle');
-            });
-            b.addEventListener('mouseleave', function() {
-              b.classList.remove('bottle--wiggle');
-            });
-
-            /* Click to reveal definition */
-            b.addEventListener('click', function() {
-              var data = softData[idx];
-              if (!data) return;
-
-              if (activeBottle === idx && panel.classList.contains('shelf__panel--open')) {
-                panel.classList.remove('shelf__panel--open');
-                panel.setAttribute('aria-hidden', 'true');
-                b.setAttribute('aria-expanded', 'false');
-                activeBottle = null;
-                return;
-              }
-
-              /* Deactivate previous */
-              bottles.forEach(function(ob) { ob.setAttribute('aria-expanded', 'false'); ob.classList.remove('bottle--active'); });
-
-              emojiEl.textContent = data.emoji;
-              emojiEl.style.background = 'linear-gradient(135deg, ' + data.color + '33, ' + data.color + '11)';
-              emojiEl.style.borderColor = data.color + '44';
-              titleEl.textContent = data.name;
-              titleEl.style.color = data.color;
-              descEl.textContent = data.description;
-
-              panel.classList.add('shelf__panel--open');
-              panel.setAttribute('aria-hidden', 'false');
-              b.setAttribute('aria-expanded', 'true');
-              b.classList.add('bottle--active');
-              activeBottle = idx;
-
-              /* Smooth scroll to panel on mobile */
-              if (window.innerWidth < 768) {
-                panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-              }
-            });
+          // Update bg
+          bgImgs.forEach(function(bg, i) {
+            bg.classList.toggle('kombucha__bg-img--active', i === idx);
           });
 
-          /* Close button */
-          var closeBtn = panel ? panel.querySelector('.shelf__panel-close') : null;
-          if (closeBtn) {
-            closeBtn.addEventListener('click', function() {
-              panel.classList.remove('shelf__panel--open');
-              panel.setAttribute('aria-hidden', 'true');
-              bottles.forEach(function(ob) { ob.setAttribute('aria-expanded', 'false'); ob.classList.remove('bottle--active'); });
-              activeBottle = null;
-            });
+          // Update overlay color
+          bgOverlay.style.background = 'linear-gradient(135deg, ' + data[idx].color + '66, ' + data[idx].color + '22)';
+
+          // Update dots
+          dots.forEach(function(d, i) {
+            d.classList.toggle('kombucha__dot--active', i === idx);
+          });
+
+          // If detail is open, update detail panel
+          if (isDetailOpen) {
+            updateDetail(idx);
           }
-        })();
-      </script>
+        }
 
-      <!-- Hidden JSON data for the script -->
-      <script type="application/json" id="soft-skills-data" set:html={JSON.stringify(softSkills.map(s => ({ name: s.name, description: s.description, emoji: s.emoji, color: s.color })))} />
+        // ── Update detail content ──
+        function updateDetail(idx) {
+          var d = data[idx];
+          dEmoji.textContent = d.emoji;
+          dTitle.textContent = d.name;
+          dTitle.style.color = d.colorLight;
+          dIngredients.textContent = d.ingredients;
+          dIngredients.style.color = d.color;
+          dDesc.textContent = d.description;
+        }
+
+        // ── Open detail view (the "deblur" effect) ──
+        function openDetail() {
+          if (isDetailOpen) return;
+          isDetailOpen = true;
+          slider.classList.add('kombucha--detail-open');
+          bgBlur.style.backdropFilter = 'blur(0px)';
+          bgBlur.style.webkitBackdropFilter = 'blur(0px)';
+          updateDetail(current);
+          hint.style.opacity = '0';
+          // Re-position active bottle to left
+          repositionForDetail();
+        }
+
+        // ── Close detail view ──
+        function closeDetail() {
+          if (!isDetailOpen) return;
+          isDetailOpen = false;
+          slider.classList.remove('kombucha--detail-open');
+          bgBlur.style.backdropFilter = 'blur(28px)';
+          bgBlur.style.webkitBackdropFilter = 'blur(28px)';
+          hint.style.opacity = '1';
+          goTo(current);
+        }
+
+        // ── Reposition bottles for detail view ──
+        function repositionForDetail() {
+          bottles.forEach(function(b, i) {
+            if (i === current) {
+              b.style.transform = 'translateX(-40%) scale(0.85)';
+              b.style.opacity = '1';
+              b.style.zIndex = '10';
+              b.style.filter = 'none';
+            } else {
+              b.style.opacity = '0';
+              b.style.pointerEvents = 'none';
+            }
+          });
+        }
+
+        // ── Event listeners ──
+
+        // Arrows
+        document.getElementById('kb-prev').addEventListener('click', function() {
+          goTo(current - 1);
+        });
+        document.getElementById('kb-next').addEventListener('click', function() {
+          goTo(current + 1);
+        });
+
+        // Dots
+        dots.forEach(function(dot, i) {
+          dot.addEventListener('click', function() {
+            goTo(i);
+          });
+        });
+
+        // Bottle click -> open detail
+        bottles.forEach(function(b, i) {
+          b.addEventListener('click', function() {
+            if (i === current && !isDetailOpen) {
+              openDetail();
+            }
+          });
+        });
+
+        // Close detail
+        document.getElementById('kb-close').addEventListener('click', closeDetail);
+
+        // Detail nav
+        document.getElementById('kb-d-prev').addEventListener('click', function() {
+          var next = current - 1 < 0 ? total - 1 : current - 1;
+          goTo(next);
+          repositionForDetail();
+        });
+        document.getElementById('kb-d-next').addEventListener('click', function() {
+          var next = current + 1 >= total ? 0 : current + 1;
+          goTo(next);
+          repositionForDetail();
+        });
+
+        // Touch swipe
+        var touchStartX = 0;
+        var touchEndX = 0;
+        var stageEl = stage;
+
+        stageEl.addEventListener('touchstart', function(e) {
+          touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        stageEl.addEventListener('touchend', function(e) {
+          touchEndX = e.changedTouches[0].screenX;
+          var diff = touchStartX - touchEndX;
+          if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+              goTo(current + 1);
+              if (isDetailOpen) repositionForDetail();
+            } else {
+              goTo(current - 1);
+              if (isDetailOpen) repositionForDetail();
+            }
+          }
+        }, { passive: true });
+
+        // Keyboard
+        document.addEventListener('keydown', function(e) {
+          // Only when slider is visible in viewport
+          var rect = slider.getBoundingClientRect();
+          if (rect.top > window.innerHeight || rect.bottom < 0) return;
+          if (e.key === 'ArrowLeft') goTo(current - 1);
+          if (e.key === 'ArrowRight') goTo(current + 1);
+          if (e.key === 'Escape' && isDetailOpen) closeDetail();
+          if (e.key === 'Enter' && !isDetailOpen) openDetail();
+        });
+
+        // Init
+        goTo(0);
+      })();
+      </script>
     </>
   )}
 </section>
 
 <style>
+  /* ═══════════════════════════════════
+     Technical Skills Grid
+     ═══════════════════════════════════ */
   .skills__grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -200,7 +389,6 @@ const hasSoftSkills = softSkills.length > 0;
     overflow: hidden;
   }
 
-  /* ── Skill card hover image ── */
   .skills__img-peek {
     position: absolute;
     inset: 0;
@@ -221,13 +409,8 @@ const hasSoftSkills = softSkills.length > 0;
     transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
-  .skills__card:hover .skills__img-peek {
-    opacity: 1;
-  }
-
-  .skills__card:hover .skills__img-peek img {
-    transform: scale(1.0);
-  }
+  .skills__card:hover .skills__img-peek { opacity: 1; }
+  .skills__card:hover .skills__img-peek img { transform: scale(1.0); }
 
   .skills__icon-box,
   .skills__info {
@@ -296,7 +479,6 @@ const hasSoftSkills = softSkills.length > 0;
     font-size: 0.78rem;
     color: var(--text-secondary);
     transition: all var(--transition-fast);
-    position: relative;
     contain: layout style;
   }
 
@@ -304,17 +486,6 @@ const hasSoftSkills = softSkills.length > 0;
     color: var(--primary-light);
     border-color: var(--primary);
     text-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
-    animation: glitch-flicker 0.3s ease-out;
-  }
-
-  @keyframes glitch-flicker {
-    0% { transform: translate(0); opacity: 1; }
-    10% { transform: translate(-2px, 1px); opacity: 0.8; }
-    20% { transform: translate(2px, -1px); opacity: 1; }
-    30% { transform: translate(-1px, -1px); opacity: 0.9; }
-    40% { transform: translate(1px, 1px); opacity: 1; }
-    50% { transform: translate(0); opacity: 0.85; }
-    100% { transform: translate(0); opacity: 1; }
   }
 
   .skills__card:hover .skills__chip {
@@ -322,283 +493,544 @@ const hasSoftSkills = softSkills.length > 0;
   }
 
   /* ═══════════════════════════════════
-     Soft Skills — Ciao Kombucha Shelf
+     Kombucha Interactive Slider
      ═══════════════════════════════════ */
-  .shelf {
+  .kombucha {
+    position: relative;
+    width: 100%;
+    min-height: 520px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
     margin-top: 1.5rem;
+    contain: layout;
   }
 
-  .shelf__row {
-    display: flex;
-    justify-content: center;
-    gap: clamp(1rem, 3vw, 2.5rem);
-    align-items: flex-end;
-    padding: 2rem 0 1rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+  /* ── Background layers ── */
+  .kombucha__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
   }
 
-  .shelf__row::-webkit-scrollbar { display: none; }
+  .kombucha__bg-img {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity;
+  }
 
-  /* ── Bottle (each soft skill) ── */
-  .bottle {
-    all: unset;
-    cursor: pointer;
+  .kombucha__bg-img--active {
+    opacity: 1;
+  }
+
+  .kombucha__bg-blur {
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    transition: backdrop-filter 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                -webkit-backdrop-filter 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+  }
+
+  .kombucha__bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.4), rgba(124, 58, 237, 0.15));
+    transition: background 0.8s ease;
+    z-index: 2;
+  }
+
+  /* ── Carousel ── */
+  .kombucha__carousel {
+    position: relative;
+    z-index: 3;
     display: flex;
     flex-direction: column;
     align-items: center;
-    animation: bottle-entrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
-    animation-delay: var(--bottle-delay);
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-                filter 0.3s ease;
+    justify-content: center;
+    min-height: 520px;
+    padding: 2rem;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ── Navigation arrows ── */
+  .kombucha__arrow {
+    all: unset;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .kombucha__arrow:hover {
+    background: rgba(255,255,255,0.18);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .kombucha__arrow--prev { left: 1rem; }
+  .kombucha__arrow--next { right: 1rem; }
+
+  /* ── Bottle stage ── */
+  .kombucha__stage {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
+  }
+
+  /* ── Individual bottle ── */
+  .kb-bottle {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.5s ease,
+                filter 0.5s ease;
+    will-change: transform, opacity;
     -webkit-tap-highlight-color: transparent;
   }
 
-  @keyframes bottle-entrance {
-    from {
-      opacity: 0;
-      transform: translateY(40px) scale(0.7) rotate(-8deg);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1) rotate(0deg);
-    }
+  .kb-bottle--active {
+    cursor: pointer;
   }
 
-  .bottle:hover {
-    transform: translateY(-12px) scale(1.05);
-    filter: brightness(1.1);
+  .kb-bottle--active:hover .kb-bottle__vessel {
+    transform: translateY(-8px);
   }
 
-  .bottle--active {
-    transform: translateY(-16px) scale(1.08) !important;
-  }
-
-  .bottle--active .bottle__body {
-    box-shadow: 0 0 30px var(--bottle-color), 0 8px 40px rgba(0,0,0,0.3);
-  }
-
-  .bottle--active .bottle__cap {
-    background: var(--bottle-color);
-  }
-
-  /* Wiggle animation (Ciao Kombucha hover) */
-  .bottle--wiggle .bottle__shape {
-    animation: bottle-wiggle 0.5s ease;
-  }
-
-  @keyframes bottle-wiggle {
-    0% { transform: rotate(0deg); }
-    15% { transform: rotate(-6deg); }
-    30% { transform: rotate(5deg); }
-    45% { transform: rotate(-4deg); }
-    60% { transform: rotate(3deg); }
-    75% { transform: rotate(-1deg); }
-    100% { transform: rotate(0deg); }
-  }
-
-  .bottle__shape {
+  /* ── CSS 3D Bottle ── */
+  .kb-bottle__vessel {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    transform-origin: bottom center;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  /* Cap (top of bottle) */
-  .bottle__cap {
-    width: 32px;
-    height: 18px;
-    background: var(--bg-glass);
-    border: 2px solid var(--bottle-color);
-    border-radius: 8px 8px 3px 3px;
-    margin-bottom: -2px;
-    z-index: 2;
-    transition: background 0.3s ease;
-  }
-
-  /* Body (main shape) */
-  .bottle__body {
-    width: clamp(100px, 13vw, 140px);
-    height: clamp(170px, 22vw, 230px);
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--bottle-color) 15%, transparent),
-      color-mix(in srgb, var(--bottle-color) 30%, var(--bg-card))
-    );
-    border: 2px solid color-mix(in srgb, var(--bottle-color) 40%, transparent);
-    border-radius: 12px 12px 20px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  /* Cap */
+  .kb-bottle__cap {
+    width: 28px;
+    height: 12px;
+    background: linear-gradient(180deg, #d4d4d8, #a1a1aa, #d4d4d8);
+    border-radius: 4px 4px 1px 1px;
     position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(8px);
-    transition: box-shadow 0.4s ease, border-color 0.3s ease;
-    box-shadow: 
-      inset 0 -20px 30px rgba(0,0,0,0.15),
-      0 4px 20px rgba(0,0,0,0.2);
+    z-index: 3;
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.5);
   }
 
-  /* Shine highlight on body */
-  .bottle__body::before {
+  .kb-bottle__cap::after {
     content: '';
     position: absolute;
-    top: 8px;
-    left: 8px;
-    width: 30%;
-    height: 50%;
-    background: linear-gradient(
-      165deg,
-      rgba(255,255,255,0.2) 0%,
-      rgba(255,255,255,0.05) 40%,
-      transparent 60%
-    );
-    border-radius: 8px;
-    pointer-events: none;
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 22px;
+    height: 4px;
+    background: linear-gradient(180deg, #d4d4d8, #a1a1aa);
+    border-radius: 0 0 2px 2px;
   }
 
-  /* Liquid fill effect */
-  .bottle__body::after {
+  /* Neck */
+  .kb-bottle__neck {
+    width: 22px;
+    height: 24px;
+    background: linear-gradient(90deg,
+      rgba(255,255,255,0.05) 0%,
+      rgba(255,255,255,0.15) 30%,
+      rgba(255,255,255,0.05) 60%,
+      rgba(255,255,255,0.02) 100%
+    );
+    border-left: 1px solid rgba(255,255,255,0.1);
+    border-right: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    z-index: 2;
+  }
+
+  .kb-bottle__neck::after {
     content: '';
+    position: absolute;
+    bottom: -1px;
+    left: -8px;
+    right: -8px;
+    height: 12px;
+    background: linear-gradient(90deg,
+      rgba(255,255,255,0.02),
+      rgba(255,255,255,0.1) 40%,
+      rgba(255,255,255,0.04)
+    );
+    border-radius: 0 0 4px 4px;
+    clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
+  }
+
+  /* Body */
+  .kb-bottle__body {
+    width: 110px;
+    height: 220px;
+    background: linear-gradient(90deg,
+      rgba(255,255,255,0.03) 0%,
+      rgba(255,255,255,0.12) 25%,
+      rgba(255,255,255,0.06) 50%,
+      rgba(255,255,255,0.03) 80%,
+      rgba(255,255,255,0.01) 100%
+    );
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px 6px 16px 16px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    box-shadow:
+      inset 4px 0 12px rgba(255,255,255,0.06),
+      inset -2px 0 8px rgba(0,0,0,0.1),
+      inset 0 -30px 40px rgba(0,0,0,0.15),
+      0 8px 32px rgba(0,0,0,0.3),
+      0 2px 8px rgba(0,0,0,0.2);
+  }
+
+  /* Glass shine */
+  .kb-bottle__glass-shine {
+    position: absolute;
+    top: 0;
+    left: 6px;
+    width: 20px;
+    height: 100%;
+    background: linear-gradient(180deg,
+      rgba(255,255,255,0.18) 0%,
+      rgba(255,255,255,0.06) 40%,
+      rgba(255,255,255,0.02) 70%,
+      transparent 100%
+    );
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* Liquid fill */
+  .kb-bottle__liquid {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 65%;
-    background: linear-gradient(
-      0deg,
-      color-mix(in srgb, var(--bottle-color) 25%, transparent),
+    height: 70%;
+    background: linear-gradient(0deg,
+      var(--bc) 0%,
+      color-mix(in srgb, var(--bc) 70%, transparent) 60%,
+      transparent 100%
+    );
+    border-radius: 0 0 15px 15px;
+    z-index: 1;
+    transition: background 0.6s ease;
+    animation: liquid-float 4s ease-in-out infinite;
+  }
+
+  .kb-bottle__liquid::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 4px;
+    right: 4px;
+    height: 8px;
+    background: linear-gradient(90deg,
+      transparent,
+      rgba(255,255,255,0.15),
       transparent
     );
-    border-radius: 0 0 18px 18px;
-    pointer-events: none;
-    animation: liquid-wave 3s ease-in-out infinite;
-  }
-
-  @keyframes liquid-wave {
-    0%, 100% { height: 65%; }
-    50% { height: 68%; }
-  }
-
-  .bottle__emoji {
-    font-size: clamp(2.2rem, 5vw, 3.2rem);
-    z-index: 1;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
-    transition: transform 0.3s ease;
-    line-height: 1;
-  }
-
-  .bottle:hover .bottle__emoji {
-    transform: scale(1.15) rotate(-5deg);
-  }
-
-  /* Label below bottle */
-  .bottle__label {
-    margin-top: 1rem;
-    text-align: center;
-    max-width: clamp(100px, 13vw, 140px);
-  }
-
-  .bottle__name {
-    font-family: var(--font-mono);
-    font-size: clamp(0.75rem, 1.4vw, 0.9rem);
-    font-weight: 600;
-    color: var(--text-secondary);
-    letter-spacing: 0.02em;
-    line-height: 1.3;
-    transition: color 0.3s ease;
-  }
-
-  .bottle:hover .bottle__name,
-  .bottle--active .bottle__name {
-    color: var(--bottle-color);
-  }
-
-  /* Shadow under bottle */
-  .bottle__shadow {
-    width: 60%;
-    height: 8px;
-    background: radial-gradient(ellipse, rgba(0,0,0,0.25) 0%, transparent 70%);
-    margin-top: 0.5rem;
     border-radius: 50%;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    animation: liquid-surface 3s ease-in-out infinite;
   }
 
-  .bottle:hover .bottle__shadow {
-    transform: scaleX(1.3) scaleY(0.6);
+  @keyframes liquid-float {
+    0%, 100% { height: 70%; }
+    50% { height: 72%; }
+  }
+
+  @keyframes liquid-surface {
+    0%, 100% { transform: scaleX(1); opacity: 0.6; }
+    50% { transform: scaleX(0.85); opacity: 1; }
+  }
+
+  /* Label */
+  .kb-bottle__label {
+    position: absolute;
+    bottom: 10%;
+    left: 8px;
+    right: 8px;
+    height: 55%;
+    background: linear-gradient(180deg,
+      color-mix(in srgb, var(--bc) 40%, #0a0f1e) 0%,
+      color-mix(in srgb, var(--bc) 20%, #0a0f1e) 100%
+    );
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px;
+    z-index: 3;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+
+  /* Cut-out keyword */
+  .kb-bottle__keyword {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    background: linear-gradient(180deg, var(--bc-light), var(--bc));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    line-height: 1;
     opacity: 0.6;
   }
 
-  /* ── Definition Panel ── */
-  .shelf__panel {
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    background: var(--bg-card);
-    backdrop-filter: blur(16px);
-    border: 1px solid var(--border);
-    border-radius: var(--border-radius);
+  .kb-bottle__ingredients {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 600;
+    color: var(--bc-light);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    text-align: center;
+    line-height: 1.4;
+    margin-top: auto;
+    padding: 0 6px;
+  }
+
+  .kb-bottle__volume {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.48rem;
+    color: rgba(255,255,255,0.35);
+    margin-top: 4px;
+    letter-spacing: 0.1em;
+  }
+
+  .kb-bottle__concept-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fff;
+    margin-top: 16px;
+    text-align: center;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    transition: opacity 0.4s ease;
+    letter-spacing: 0.02em;
+    max-width: 140px;
+    line-height: 1.3;
+  }
+
+  /* ── Dots ── */
+  .kombucha__dots {
+    display: flex;
+    gap: 10px;
     margin-top: 1rem;
-    padding: 0 2rem;
-    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.4s ease,
-                padding 0.4s ease;
-    position: relative;
+    z-index: 10;
   }
 
-  .shelf__panel--open {
-    max-height: 300px;
+  .kombucha__dot {
+    all: unset;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .kombucha__dot--active {
+    background: var(--dot-c);
+    box-shadow: 0 0 12px var(--dot-c);
+    transform: scale(1.3);
+    border-color: var(--dot-c);
+  }
+
+  .kombucha__dot:hover:not(.kombucha__dot--active) {
+    background: rgba(255,255,255,0.4);
+    transform: scale(1.15);
+  }
+
+  /* ── Hint ── */
+  .kombucha__hint {
+    margin-top: 0.75rem;
+    z-index: 10;
+    transition: opacity 0.4s ease;
+  }
+
+  .kombucha__hint span {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.04em;
+  }
+
+  /* ═══════════════════════════════════
+     Detail panel (slides from right)
+     ═══════════════════════════════════ */
+  .kombucha__detail {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 55%;
+    height: 100%;
+    z-index: 15;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2.5rem 2.5rem 2.5rem 1.5rem;
+    transform: translateX(110%);
+    opacity: 0;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.5s ease;
+    pointer-events: none;
+  }
+
+  .kombucha--detail-open .kombucha__detail {
+    transform: translateX(0);
     opacity: 1;
-    padding: 2rem;
+    pointer-events: auto;
   }
 
-  .shelf__panel-close {
+  .kombucha__detail-close {
     all: unset;
     position: absolute;
     top: 1rem;
-    right: 1.25rem;
-    font-size: 1.5rem;
-    color: var(--text-muted);
-    cursor: pointer;
-    width: 32px;
-    height: 32px;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: 50%;
-    transition: all 0.2s ease;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 20;
   }
 
-  .shelf__panel-close:hover {
-    background: rgba(255,255,255,0.05);
-    color: var(--text-primary);
+  .kombucha__detail-close:hover {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    transform: rotate(90deg);
   }
 
-  .shelf__panel-emoji {
-    width: 56px;
-    height: 56px;
+  .kombucha__detail-inner {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.8rem;
-    border-radius: 16px;
-    border: 1px solid transparent;
+    flex-direction: column;
+  }
+
+  .kombucha__detail-emoji {
+    font-size: 2.8rem;
     margin-bottom: 0.75rem;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+    line-height: 1;
   }
 
-  .shelf__panel-title {
-    font-size: 1.15rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+  .kombucha__detail-title {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+    line-height: 1.2;
+    transition: color 0.5s ease;
   }
 
-  .shelf__panel-desc {
-    color: var(--text-secondary);
+  .kombucha__detail-ingredients {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 1.25rem;
+    transition: color 0.5s ease;
+  }
+
+  .kombucha__detail-desc {
+    font-family: 'Inter', sans-serif;
     font-size: 0.95rem;
-    line-height: 1.7;
-    max-width: 600px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.75;
+    max-width: 420px;
+  }
+
+  .kombucha__detail-nav {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .kombucha__detail-navbtn {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1.1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.02em;
+  }
+
+  .kombucha__detail-navbtn:hover {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    transform: translateY(-1px);
+  }
+
+  /* ═══════════════════════════════════
+     Detail-open state overrides
+     ═══════════════════════════════════ */
+  .kombucha--detail-open .kombucha__carousel {
+    align-items: flex-start;
+    padding-left: 3%;
+  }
+
+  .kombucha--detail-open .kombucha__arrow,
+  .kombucha--detail-open .kombucha__dots,
+  .kombucha--detail-open .kombucha__hint {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .kombucha--detail-open .kb-bottle__concept-name {
+    opacity: 0;
   }
 
   /* ── Responsive ── */
@@ -607,19 +1039,52 @@ const hasSoftSkills = softSkills.length > 0;
       grid-template-columns: 1fr;
     }
 
-    .shelf__row {
-      justify-content: flex-start;
-      padding: 1.5rem 0.5rem 0.5rem;
-      gap: 1.25rem;
+    .kombucha {
+      min-height: 600px;
     }
 
-    .bottle__body {
+    .kombucha__stage {
+      height: 320px;
+    }
+
+    .kb-bottle__body {
       width: 85px;
-      height: 145px;
+      height: 175px;
     }
 
-    .shelf__panel--open {
-      padding: 1.5rem;
+    .kb-bottle__cap { width: 22px; height: 10px; }
+    .kb-bottle__neck { width: 18px; height: 18px; }
+
+    .kombucha__arrow--prev { left: 0.5rem; }
+    .kombucha__arrow--next { right: 0.5rem; }
+
+    .kombucha__detail {
+      width: 100%;
+      top: auto;
+      bottom: 0;
+      height: auto;
+      max-height: 55%;
+      padding: 2rem 1.5rem;
+      transform: translateY(110%);
+      background: linear-gradient(0deg, rgba(10,15,30,0.95) 0%, rgba(10,15,30,0.8) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
+    }
+
+    .kombucha--detail-open .kombucha__detail {
+      transform: translateY(0);
+    }
+
+    .kombucha--detail-open .kombucha__carousel {
+      align-items: center;
+      padding-left: 2rem;
+      padding-top: 1rem;
+      min-height: 300px;
+    }
+
+    .kombucha--detail-open .kb-bottle--active {
+      transform: translateX(0) scale(0.7) !important;
     }
   }
 </style>

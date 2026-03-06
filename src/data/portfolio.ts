@@ -39,10 +39,14 @@ export interface TechSkillCategory {
 
 export interface SoftSkill {
   name: string;
+  keyword: string;
   description: string;
   icon: string;
   emoji: string;
   color: string;
+  colorLight: string;
+  ingredients: string;
+  bgImage: string;
 }
 
 export interface Education {
@@ -172,12 +176,72 @@ export const techSkills: TechSkillCategory[] = [
 /* ── Soft Skills (optionnel) ────────────────────────────────────── */
 
 export const softSkills: SoftSkill[] = [
-  { name: 'Pensée Systémique', description: 'Décomposition de systèmes complexes en sous-problèmes optimisables — du CPU au marché financier. Je vois chaque projet comme un écosystème interconnecté.', icon: 'brain', emoji: '🧠', color: '#8b5cf6' },
-  { name: 'Rigueur Scientifique', description: 'Approche empirique : hypothèse, test, mesure, itération. Chaque décision technique est justifiée par les données, jamais par l\'intuition seule.', icon: 'shield-check', emoji: '🔬', color: '#06b6d4' },
-  { name: 'Apprentissage Autonome', description: 'Stack technique autodidacte : Next.js, Astro, SMC, DSP audio — j\'apprends en construisant. La curiosité est mon moteur principal.', icon: 'book-open', emoji: '📚', color: '#f59e0b' },
-  { name: 'Vision Transversale', description: 'Capacité à transférer des paradigmes entre domaines : l\'optimisation de pipeline s\'applique au code, à l\'audio, et aux flux financiers.', icon: 'sparkles', emoji: '👁️', color: '#ec4899' },
-  { name: 'Résolution Créative', description: 'Face à un problème, je ne cherche pas la solution évidente — je cherche la solution élégante. L\'innovation naît à l\'intersection des contraintes.', icon: 'sparkles', emoji: '💡', color: '#22c55e' },
-  { name: 'Communication Claire', description: 'Transformer des concepts techniques complexes en explications limpides. Documenter, vulgariser, partager : le code ne vit pas seul.', icon: 'sparkles', emoji: '🎯', color: '#f97316' },
+  {
+    name: 'Pensée Systémique',
+    keyword: 'SYSTÉMIQUE',
+    description: 'Décomposition de systèmes complexes en sous-problèmes optimisables — du CPU au marché financier. Je vois chaque projet comme un écosystème interconnecté où chaque composant influence les autres.',
+    icon: 'brain',
+    emoji: '🧠',
+    color: '#7c3aed',
+    colorLight: '#c4b5fd',
+    ingredients: 'Violette & Myrtille',
+    bgImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=800&fit=crop',
+  },
+  {
+    name: 'Rigueur Scientifique',
+    keyword: 'RIGUEUR',
+    description: 'Approche empirique : hypothèse, test, mesure, itération. Chaque décision technique est justifiée par les données, jamais par l\'intuition seule. La méthode prime sur l\'improvisation.',
+    icon: 'shield-check',
+    emoji: '🔬',
+    color: '#0891b2',
+    colorLight: '#67e8f9',
+    ingredients: 'Spiruline & Aloé',
+    bgImage: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1200&h=800&fit=crop',
+  },
+  {
+    name: 'Apprentissage Autonome',
+    keyword: 'AUTONOME',
+    description: 'Stack technique autodidacte : Next.js, Astro, SMC, DSP audio — j\'apprends en construisant. La curiosité est mon moteur, chaque projet est une occasion de maîtriser un nouveau domaine.',
+    icon: 'book-open',
+    emoji: '📚',
+    color: '#d97706',
+    colorLight: '#fcd34d',
+    ingredients: 'Gingembre, Miel & Curcuma',
+    bgImage: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1200&h=800&fit=crop',
+  },
+  {
+    name: 'Vision Transversale',
+    keyword: 'VISION',
+    description: 'Capacité à transférer des paradigmes entre domaines : l\'optimisation de pipeline s\'applique au code, à l\'audio, et aux flux financiers. Les connexions invisibles sont mon terrain de jeu.',
+    icon: 'sparkles',
+    emoji: '👁️',
+    color: '#be185d',
+    colorLight: '#f9a8d4',
+    ingredients: 'Hibiscus & Grenade',
+    bgImage: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=800&fit=crop',
+  },
+  {
+    name: 'Synergie Naturelle',
+    keyword: 'SYNERGIE',
+    description: 'Face à un problème, je ne cherche pas la solution évidente — je cherche la solution élégante. L\'innovation naît à l\'intersection des contraintes et de la collaboration.',
+    icon: 'sparkles',
+    emoji: '💡',
+    color: '#059669',
+    colorLight: '#6ee7b7',
+    ingredients: 'Menthe, Limette & Concombre',
+    bgImage: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1200&h=800&fit=crop',
+  },
+  {
+    name: 'Communication Claire',
+    keyword: 'COMMUNICATION',
+    description: 'Transformer des concepts techniques complexes en explications limpides. Documenter, vulgariser, partager : le code ne vit pas seul, il doit être compris par tous.',
+    icon: 'sparkles',
+    emoji: '🎯',
+    color: '#ea580c',
+    colorLight: '#fdba74',
+    ingredients: 'Agrumes & Carotte',
+    bgImage: 'https://images.unsplash.com/photo-1547514701-42782101795e?w=1200&h=800&fit=crop',
+  },
 ];
 
 /* ── Education ──────────────────────────────────────────────────── */
