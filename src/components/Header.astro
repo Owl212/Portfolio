@@ -296,9 +296,9 @@ function getIcon(name: string): string {
   .drawer__backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(10, 15, 30, 0.6);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     opacity: 0;
     transition: opacity var(--transition-base);
   }
@@ -314,7 +314,7 @@ function getIcon(name: string): string {
     bottom: 0;
     width: 300px;
     max-width: 85vw;
-    background: var(--bg-secondary);
+    background: rgba(10, 15, 30, 0.98);
     border-left: 1px solid var(--border);
     padding: calc(var(--header-height) + 2rem) 2rem 2rem;
     transform: translateX(100%);

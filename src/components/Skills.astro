@@ -301,22 +301,25 @@ const hasSoftSkills = softSkills.length > 0;
           bgBlur.style.webkitBackdropFilter = 'blur(28px)';
           bgOverlay.style.background = 'linear-gradient(135deg, ' + data[current].color + '66, ' + data[current].color + '22)';
           hint.style.opacity = '1';
-          // Hide AI bottle image
+          // Hide AI bottle image and reset height
           hideAiBottle();
+          bottles.forEach(function(b) { b.style.height = ''; });
           goTo(current);
         }
 
         // ── Reposition bottles for detail view ──
         function repositionForDetail() {
           var stageW = stage.offsetWidth;
-          // Place bottle at ~20% from left edge
+          var stageH = stage.offsetHeight;
+          // Place bottle at ~28% from left edge
           var targetX = -(stageW * 0.28);
           bottles.forEach(function(b, i) {
             if (i === current) {
-              b.style.transform = 'translateX(' + targetX + 'px) scale(0.9)';
+              b.style.transform = 'translateX(' + targetX + 'px) scale(1)';
               b.style.opacity = '1';
               b.style.zIndex = '10';
               b.style.filter = 'none';
+              b.style.height = stageH + 'px';
             } else {
               b.style.opacity = '0';
               b.style.pointerEvents = 'none';
@@ -689,29 +692,31 @@ const hasSoftSkills = softSkills.length > 0;
   /* ── AI Bottle Image (morph on click) ── */
   .kb-bottle__ai-img {
     position: absolute;
-    top: 0;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%) scale(0.7);
+    transform: translate(-50%, -50%) scale(0.6);
+    height: 95%;
     width: auto;
-    height: 280px;
+    max-width: none;
     object-fit: contain;
+    image-rendering: high-quality;
     opacity: 0;
     pointer-events: none;
     z-index: 6;
-    border-radius: 12px;
-    filter: drop-shadow(0 12px 40px rgba(0,0,0,0.5));
+    border-radius: 16px;
+    filter: drop-shadow(0 16px 48px rgba(0,0,0,0.6));
     transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
                 transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .kb-bottle__ai-img--visible {
     opacity: 1;
-    transform: translateX(-50%) scale(1);
+    transform: translate(-50%, -50%) scale(1);
   }
 
   .kb-bottle__vessel--hidden {
     opacity: 0;
-    transform: scale(0.7);
+    transform: scale(0.6);
     transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -1160,7 +1165,7 @@ const hasSoftSkills = softSkills.length > 0;
     .kb-bottle__neck { width: 18px; height: 18px; }
 
     .kb-bottle__ai-img {
-      height: 220px;
+      height: 90%;
     }
 
     .kombucha__arrow--prev { left: 0.5rem; }
