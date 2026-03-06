@@ -113,14 +113,6 @@ const hasSoftSkills = softSkills.length > 0;
                     </div>
                   </div>
                 </div>
-                <!-- AI bottle image (revealed on click) -->
-                <img
-                  class="kb-bottle__ai-img"
-                  src={s.bottleImage}
-                  alt={s.name}
-                  loading="lazy"
-                  decoding="async"
-                />
                 <span class="kb-bottle__concept-name">{s.name}</span>
               </div>
             ))}
@@ -176,8 +168,7 @@ const hasSoftSkills = softSkills.length > 0;
         emoji: s.emoji,
         color: s.color,
         colorLight: s.colorLight,
-        ingredients: s.ingredients,
-        bottleImage: s.bottleImage
+        ingredients: s.ingredients
       })))} />
 
       <script is:inline>
@@ -288,8 +279,6 @@ const hasSoftSkills = softSkills.length > 0;
           updateDetail(current);
           hint.style.opacity = '0';
           repositionForDetail();
-          // Show AI bottle image with morph
-          showAiBottle(current);
         }
 
         // ── Close detail view ──
@@ -301,25 +290,20 @@ const hasSoftSkills = softSkills.length > 0;
           bgBlur.style.webkitBackdropFilter = 'blur(28px)';
           bgOverlay.style.background = 'linear-gradient(135deg, ' + data[current].color + '66, ' + data[current].color + '22)';
           hint.style.opacity = '1';
-          // Hide AI bottle image and reset height
-          hideAiBottle();
-          bottles.forEach(function(b) { b.style.height = ''; });
           goTo(current);
         }
 
         // ── Reposition bottles for detail view ──
         function repositionForDetail() {
           var stageW = stage.offsetWidth;
-          var stageH = stage.offsetHeight;
           // Place bottle at ~28% from left edge
           var targetX = -(stageW * 0.28);
           bottles.forEach(function(b, i) {
             if (i === current) {
-              b.style.transform = 'translateX(' + targetX + 'px) scale(1)';
+              b.style.transform = 'translateX(' + targetX + 'px) scale(0.9)';
               b.style.opacity = '1';
               b.style.zIndex = '10';
               b.style.filter = 'none';
-              b.style.height = stageH + 'px';
             } else {
               b.style.opacity = '0';
               b.style.pointerEvents = 'none';
@@ -330,30 +314,6 @@ const hasSoftSkills = softSkills.length > 0;
           slider.style.setProperty('--active-color', d.color);
           slider.style.setProperty('--active-light', d.colorLight);
           bgOverlay.style.background = 'linear-gradient(135deg, ' + d.color + '88, rgba(10,15,30,0.7))';
-        }
-
-        // ── Show/hide AI bottle image on detail ──
-        function showAiBottle(idx) {
-          bottles.forEach(function(b, i) {
-            var vessel = b.querySelector('.kb-bottle__vessel');
-            var aiImg = b.querySelector('.kb-bottle__ai-img');
-            if (i === idx) {
-              vessel.classList.add('kb-bottle__vessel--hidden');
-              aiImg.classList.add('kb-bottle__ai-img--visible');
-            } else {
-              vessel.classList.remove('kb-bottle__vessel--hidden');
-              aiImg.classList.remove('kb-bottle__ai-img--visible');
-            }
-          });
-        }
-
-        function hideAiBottle() {
-          bottles.forEach(function(b) {
-            var vessel = b.querySelector('.kb-bottle__vessel');
-            var aiImg = b.querySelector('.kb-bottle__ai-img');
-            vessel.classList.remove('kb-bottle__vessel--hidden');
-            aiImg.classList.remove('kb-bottle__ai-img--visible');
-          });
         }
 
         // ── Event listeners ──
@@ -390,13 +350,11 @@ const hasSoftSkills = softSkills.length > 0;
           var next = current - 1 < 0 ? total - 1 : current - 1;
           goTo(next);
           repositionForDetail();
-          showAiBottle(current);
         });
         document.getElementById('kb-d-next').addEventListener('click', function() {
           var next = current + 1 >= total ? 0 : current + 1;
           goTo(next);
           repositionForDetail();
-          showAiBottle(current);
         });
 
         // Touch swipe
@@ -414,10 +372,10 @@ const hasSoftSkills = softSkills.length > 0;
           if (Math.abs(diff) > 50) {
             if (diff > 0) {
               goTo(current + 1);
-              if (isDetailOpen) { repositionForDetail(); showAiBottle(current); }
+              if (isDetailOpen) { repositionForDetail(); }
             } else {
               goTo(current - 1);
-              if (isDetailOpen) { repositionForDetail(); showAiBottle(current); }
+              if (isDetailOpen) { repositionForDetail(); }
             }
           }
         }, { passive: true });
@@ -687,37 +645,6 @@ const hasSoftSkills = softSkills.length > 0;
 
   .kb-bottle--active:hover .kb-bottle__vessel {
     transform: translateY(-8px);
-  }
-
-  /* ── AI Bottle Image (morph on click) ── */
-  .kb-bottle__ai-img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.6);
-    height: 95%;
-    width: auto;
-    max-width: none;
-    object-fit: contain;
-    image-rendering: high-quality;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 6;
-    border-radius: 16px;
-    filter: drop-shadow(0 16px 48px rgba(0,0,0,0.6));
-    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .kb-bottle__ai-img--visible {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-
-  .kb-bottle__vessel--hidden {
-    opacity: 0;
-    transform: scale(0.6);
-    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* ── CSS 3D Bottle ── */
@@ -1163,10 +1090,6 @@ const hasSoftSkills = softSkills.length > 0;
 
     .kb-bottle__cap { width: 22px; height: 10px; }
     .kb-bottle__neck { width: 18px; height: 18px; }
-
-    .kb-bottle__ai-img {
-      height: 90%;
-    }
 
     .kombucha__arrow--prev { left: 0.5rem; }
     .kombucha__arrow--next { right: 0.5rem; }
