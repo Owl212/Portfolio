@@ -242,12 +242,26 @@ const hasSoftSkills = softSkills.length > 0;
         // ── Update detail content ──
         function updateDetail(idx) {
           var d = data[idx];
-          dEmoji.textContent = d.emoji;
-          dTitle.textContent = d.name;
-          dTitle.style.color = d.colorLight;
-          dIngredients.textContent = d.ingredients;
-          dIngredients.style.color = d.color;
-          dDesc.textContent = d.description;
+          // Fade out, swap, fade in
+          var inner = detail.querySelector('.kombucha__detail-inner');
+          inner.style.opacity = '0';
+          inner.style.transform = 'translateY(12px)';
+          setTimeout(function() {
+            dEmoji.textContent = d.emoji;
+            dTitle.textContent = d.name;
+            dTitle.style.color = d.colorLight;
+            dIngredients.textContent = d.ingredients;
+            dIngredients.style.color = d.colorLight;
+            dDesc.textContent = d.description;
+            // Update nav button accent
+            var navBtns = detail.querySelectorAll('.kombucha__detail-navbtn');
+            navBtns.forEach(function(btn) {
+              btn.style.borderColor = d.color + '44';
+              btn.style.color = d.colorLight;
+            });
+            inner.style.opacity = '1';
+            inner.style.transform = 'translateY(0)';
+          }, 180);
         }
 
         // ── Open detail view (the "deblur" effect) ──
@@ -255,11 +269,15 @@ const hasSoftSkills = softSkills.length > 0;
           if (isDetailOpen) return;
           isDetailOpen = true;
           slider.classList.add('kombucha--detail-open');
+          // Set active color as CSS variable for theming
+          var d = data[current];
+          slider.style.setProperty('--active-color', d.color);
+          slider.style.setProperty('--active-light', d.colorLight);
           bgBlur.style.backdropFilter = 'blur(0px)';
           bgBlur.style.webkitBackdropFilter = 'blur(0px)';
+          bgOverlay.style.background = 'linear-gradient(135deg, ' + d.color + '88, rgba(10,15,30,0.7))';
           updateDetail(current);
           hint.style.opacity = '0';
-          // Re-position active bottle to left
           repositionForDetail();
         }
 
@@ -270,15 +288,19 @@ const hasSoftSkills = softSkills.length > 0;
           slider.classList.remove('kombucha--detail-open');
           bgBlur.style.backdropFilter = 'blur(28px)';
           bgBlur.style.webkitBackdropFilter = 'blur(28px)';
+          bgOverlay.style.background = 'linear-gradient(135deg, ' + data[current].color + '66, ' + data[current].color + '22)';
           hint.style.opacity = '1';
           goTo(current);
         }
 
         // ── Reposition bottles for detail view ──
         function repositionForDetail() {
+          var stageW = stage.offsetWidth;
+          // Place bottle at ~20% from left edge
+          var targetX = -(stageW * 0.28);
           bottles.forEach(function(b, i) {
             if (i === current) {
-              b.style.transform = 'translateX(-40%) scale(0.85)';
+              b.style.transform = 'translateX(' + targetX + 'px) scale(0.9)';
               b.style.opacity = '1';
               b.style.zIndex = '10';
               b.style.filter = 'none';
@@ -287,6 +309,11 @@ const hasSoftSkills = softSkills.length > 0;
               b.style.pointerEvents = 'none';
             }
           });
+          // Update theming colors
+          var d = data[current];
+          slider.style.setProperty('--active-color', d.color);
+          slider.style.setProperty('--active-light', d.colorLight);
+          bgOverlay.style.background = 'linear-gradient(135deg, ' + d.color + '88, rgba(10,15,30,0.7))';
         }
 
         // ── Event listeners ──
@@ -905,12 +932,16 @@ const hasSoftSkills = softSkills.length > 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 2.5rem 2.5rem 2.5rem 1.5rem;
+    padding: 2.5rem 3rem 2.5rem 2rem;
     transform: translateX(110%);
     opacity: 0;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
                 opacity 0.5s ease;
     pointer-events: none;
+    background: linear-gradient(135deg, rgba(10,15,30,0.6) 0%, rgba(10,15,30,0.3) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-left: 1px solid rgba(255,255,255,0.06);
   }
 
   .kombucha--detail-open .kombucha__detail {
@@ -947,6 +978,7 @@ const hasSoftSkills = softSkills.length > 0;
   .kombucha__detail-inner {
     display: flex;
     flex-direction: column;
+    transition: opacity 0.25s ease, transform 0.3s ease;
   }
 
   .kombucha__detail-emoji {
@@ -958,30 +990,32 @@ const hasSoftSkills = softSkills.length > 0;
 
   .kombucha__detail-title {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
     font-weight: 800;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.4rem;
-    line-height: 1.2;
-    transition: color 0.5s ease;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+    line-height: 1.15;
+    transition: color 0.4s ease;
   }
 
   .kombucha__detail-ingredients {
     font-family: 'Inter', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: 0.8rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.2em;
     margin-bottom: 1.25rem;
-    transition: color 0.5s ease;
+    transition: color 0.4s ease;
+    opacity: 0.85;
   }
 
   .kombucha__detail-desc {
     font-family: 'Inter', sans-serif;
-    font-size: 0.95rem;
-    color: rgba(255,255,255,0.75);
-    line-height: 1.75;
-    max-width: 420px;
+    font-size: 0.92rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.8;
+    max-width: 400px;
+    letter-spacing: 0.01em;
   }
 
   .kombucha__detail-nav {
@@ -995,31 +1029,33 @@ const hasSoftSkills = softSkills.length > 0;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.55rem 1.1rem;
+    padding: 0.6rem 1.2rem;
     font-family: 'Inter', sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 600;
     color: rgba(255,255,255,0.7);
-    background: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 100px;
     cursor: pointer;
     transition: all 0.3s ease;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   .kombucha__detail-navbtn:hover {
-    background: rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.1);
     color: #fff;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
   }
 
   /* ═══════════════════════════════════
      Detail-open state overrides
      ═══════════════════════════════════ */
   .kombucha--detail-open .kombucha__carousel {
-    align-items: flex-start;
-    padding-left: 3%;
+    align-items: center;
+    justify-content: center;
   }
 
   .kombucha--detail-open .kombucha__arrow,
@@ -1078,13 +1114,12 @@ const hasSoftSkills = softSkills.length > 0;
 
     .kombucha--detail-open .kombucha__carousel {
       align-items: center;
-      padding-left: 2rem;
       padding-top: 1rem;
       min-height: 300px;
     }
 
     .kombucha--detail-open .kb-bottle--active {
-      transform: translateX(0) scale(0.7) !important;
+      transform: translateX(0) scale(0.65) !important;
     }
   }
 </style>
