@@ -47,6 +47,7 @@ export interface SoftSkill {
   colorLight: string;
   ingredients: string;
   bgImage: string;
+  bottleImage: string;
 }
 
 export interface Education {
@@ -186,6 +187,7 @@ export const softSkills: SoftSkill[] = [
     colorLight: '#c4b5fd',
     ingredients: 'Violette & Myrtille',
     bgImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=800&fit=crop',
+    bottleImage: '/bottles/bottle-1.jpg',
   },
   {
     name: 'Rigueur Scientifique',
@@ -197,6 +199,7 @@ export const softSkills: SoftSkill[] = [
     colorLight: '#67e8f9',
     ingredients: 'Spiruline & Aloé',
     bgImage: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1200&h=800&fit=crop',
+    bottleImage: '/bottles/bottle-2.jpg',
   },
   {
     name: 'Apprentissage Autonome',
@@ -208,6 +211,7 @@ export const softSkills: SoftSkill[] = [
     colorLight: '#fcd34d',
     ingredients: 'Gingembre, Miel & Curcuma',
     bgImage: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1200&h=800&fit=crop',
+    bottleImage: '/bottles/bottle-3.jpg',
   },
   {
     name: 'Vision Transversale',
@@ -219,6 +223,7 @@ export const softSkills: SoftSkill[] = [
     colorLight: '#f9a8d4',
     ingredients: 'Hibiscus & Grenade',
     bgImage: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=800&fit=crop',
+    bottleImage: '/bottles/bottle-4.jpg',
   },
   {
     name: 'Synergie Naturelle',
@@ -230,6 +235,7 @@ export const softSkills: SoftSkill[] = [
     colorLight: '#6ee7b7',
     ingredients: 'Menthe, Limette & Concombre',
     bgImage: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1200&h=800&fit=crop',
+    bottleImage: '/bottles/bottle-5.jpg',
   },
   {
     name: 'Communication Claire',
@@ -241,6 +247,7 @@ export const softSkills: SoftSkill[] = [
     colorLight: '#fdba74',
     ingredients: 'Agrumes & Carotte',
     bgImage: 'https://images.unsplash.com/photo-1547514701-42782101795e?w=1200&h=800&fit=crop',
+    bottleImage: '/bottles/bottle-6.jpg',
   },
 ];
 
