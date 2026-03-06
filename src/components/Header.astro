@@ -296,7 +296,7 @@ function getIcon(name: string): string {
   .drawer__backdrop {
     position: absolute;
     inset: 0;
-    background: #0a0f1e;
+    background: #000;
     opacity: 0;
     transition: opacity var(--transition-base);
   }
@@ -311,7 +311,7 @@ function getIcon(name: string): string {
     right: 0;
     bottom: 0;
     left: 0;
-    background: #0a0f1e;
+    background: #000;
     padding: calc(var(--header-height) + 2rem) 2rem 2rem;
     transform: translateX(100%);
     transition: transform var(--transition-base);
@@ -378,5 +378,12 @@ function getIcon(name: string): string {
     .header__links { display: none; }
     .hamburger { display: flex; }
     .header__nav { padding: 0 1.25rem; }
+  }
+
+  /* When drawer is open, make header fully opaque black */
+  :global(body.menu-open) .header {
+    background: #000 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 </style>
